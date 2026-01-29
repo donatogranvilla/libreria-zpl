@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "5ZZT/dQjdj4=",
+  "success": true,
+  "projectFilePath": "C:\\Dev\\libreria zpl\\src\\ZplTestHarness\\ZplTestHarness.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp\\2.88.8\\skiasharp.2.88.8.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp.nativeassets.linux.nodependencies\\2.88.8\\skiasharp.nativeassets.linux.nodependencies.2.88.8.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp.nativeassets.macos\\2.88.8\\skiasharp.nativeassets.macos.2.88.8.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp.nativeassets.win32\\2.88.8\\skiasharp.nativeassets.win32.2.88.8.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\zxing.net\\0.16.9\\zxing.net.0.16.9.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\zxing.net.bindings.skiasharp\\0.16.14\\zxing.net.bindings.skiasharp.0.16.14.nupkg.sha512"
+  ],
+  "logs": []
+}

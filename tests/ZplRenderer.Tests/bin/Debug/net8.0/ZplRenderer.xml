@@ -1,0 +1,881 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ZplRenderer</name>
+    </assembly>
+    <members>
+        <member name="T:ZplRenderer.Commands.BarcodeBaseCommand">
+            <summary>
+            Base class for simple barcode commands, providing helpers.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Commands.BarcodeBaseCommand.DrawFallbackText(SkiaSharp.SKCanvas,System.String,System.Single,System.Single,System.Single,System.Single,ZplRenderer.Rendering.RenderContext)">
+            <summary>
+            Draws fallback text when barcode encoding fails.
+            Shows a bordered box with the data text inside.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.BarcodeCode128Command">
+            <summary>
+            ^BC - Code 128 Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.Code39Command">
+            <summary>
+            ^B3 - Code 39 Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.EAN13Command">
+            <summary>
+            ^BE - EAN-13 Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.Code93Command">
+            <summary>
+            ^BA - Code 93 Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.UPCACommand">
+            <summary>
+            ^BU - UPC-A Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.BarcodeQRCommand">
+            <summary>
+            ^BQ - QR Code Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.DataMatrixCommand">
+            <summary>
+            ^BX - Data Matrix Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.PDF417Command">
+            <summary>
+            ^B7 - PDF417 Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.AztecCommand">
+            <summary>
+            ^B0 - Aztec Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.MaxiCodeCommand">
+            <summary>
+            ^BD - MaxiCode Barcode command.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.BarcodeDefaultsCommand">
+            <summary>
+            ^BY - Barcode Field Default command. Sets default barcode module width and ratio.
+            Format: ^BYw,r,h
+            w = module width (1-10 dots)
+            r = wide bar to narrow bar ratio (2.0-3.0)
+            h = height of bars (1-32000 dots)
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.BarcodeDefaultsCommand.ModuleWidth">
+            <summary>Module (narrow bar) width in dots.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.BarcodeDefaultsCommand.Ratio">
+            <summary>Wide bar to narrow bar ratio.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.BarcodeDefaultsCommand.Height">
+            <summary>Default bar height in dots.</summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.CommandFactory">
+            <summary>
+            Factory for creating ZPL command instances from tokens.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Commands.CommandFactory.CreateCommand(System.String)">
+            <summary>
+            Creates a ZPL command from a command code.
+            </summary>
+            <param name="commandCode">The command code (e.g., "FO", "FD").</param>
+            <returns>A new command instance, or null if command is not supported.</returns>
+        </member>
+        <member name="M:ZplRenderer.Commands.CommandFactory.IsSupported(System.String)">
+            <summary>
+            Checks if a command code is supported.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Commands.CommandFactory.GetSupportedCommands">
+            <summary>
+            Gets a list of all supported command codes.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldOriginCommand">
+            <summary>
+            ^FO - Field Origin command. Sets the X,Y position for the next field.
+            Format: ^FOx,y,z
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FieldOriginCommand.X">
+            <summary>X position in dots from left edge.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FieldOriginCommand.Y">
+            <summary>Y position in dots from top edge.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FieldOriginCommand.Justification">
+            <summary>Justification (0=left, 1=right, 2=auto).</summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldTypesetCommand">
+            <summary>
+            ^FT - Field Typeset command. Sets the X,Y position relative to baseline.
+            Format: ^FTx,y,z
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldBlockCommand">
+            <summary>
+            ^FB - Field Block command. Allows printing text into a defined block.
+            Format: ^FBw,l,s,j,h
+            w = width of block in dots
+            l = max number of lines
+            s = space between lines in dots (added to font height)
+            j = justification (L, C, R, J)
+            h = hanging indent (dots)
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldReverseCommand">
+            <summary>
+            ^FR - Field Reverse Print command. Prints white on black background.
+            Format: ^FR
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldDataCommand">
+            <summary>
+            ^FD - Field Data command. Defines the data/text content of a field.
+            Format: ^FDdata
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FieldDataCommand.Data">
+            <summary>The field data content.</summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldHexCommand">
+            <summary>
+            ^FH - Field Hexadecimal Indicator.
+            Format: ^FHa
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldNumberCommand">
+            <summary>
+            ^FN - Field Number command. 
+            Format: ^FN#
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.SerializationCommand">
+            <summary>
+            ^SN - Serialization Data command.
+            Format: ^SNv,n,z
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldOrientationCommand">
+            <summary>
+            ^FW - Field Orientation (default). Sets default rotation for all fields.
+            Format: ^FWr,z
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FieldOrientationCommand.Orientation">
+            <summary>Default field orientation.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FieldOrientationCommand.Justification">
+            <summary>Default justification.</summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.LabelHomeCommand">
+            <summary>
+            ^LH - Label Home command. Sets the label home position.
+            Format: ^LHx,y
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FontCommand">
+            <summary>
+            ^A - Font Selection command. Selects font and sets size.
+            Format: ^Afo,h,w
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FontCommand.FontName">
+            <summary>Font name identifier (0-9, A-Z).</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FontCommand.Orientation">
+            <summary>Font orientation.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FontCommand.Height">
+            <summary>Font height in dots.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.FontCommand.Width">
+            <summary>Font width in dots (0 = proportional).</summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.ChangeDefaultFontCommand">
+            <summary>
+            ^CF - Change Default Font command.
+            Format: ^CFf,h,w
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.ScalableFontCommand">
+            <summary>
+            ^A@ - Use Scalable Font by Name.
+            Format: ^A@o,h,w,d:f.x
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.ChangeInternationalFontCommand">
+            <summary>
+            ^CI - Change International Font (Encoding).
+            Format: ^CIa
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.TextRenderCommand">
+            <summary>
+            Renders the current field data as text.
+            Handles ^FB (wrapping), ^FT (baseline position), ^FR (reverse print).
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.StartFormatCommand">
+            <summary>
+            ^XA - Start Format command. Marks the beginning of a label format.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.EndFormatCommand">
+            <summary>
+            ^XZ - End Format command. Marks the end of a label format.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.FieldSeparatorCommand">
+            <summary>
+            ^FS - Field Separator command. Ends a field definition.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.PrintWidthCommand">
+            <summary>
+            ^PW - Print Width. Sets the print width.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.LabelLengthCommand">
+            <summary>
+            ^LL - Label Length. Sets the length of the label.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.PrintQuantityCommand">
+            <summary>
+            ^PQ - Print Quantity. Control the quantity of labels to print.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.MediaDarknessCommand">
+            <summary>
+            ^MD - Media Darkness. Adjusts the darkness of the printed image.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.PrintRateCommand">
+            <summary>
+            ^PR - Print Rate. Determines the speed of the print.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.GraphicBoxCommand">
+            <summary>
+            ^GB - Graphic Box command. Draws a box or line.
+            Format: ^GBw,h,t,c,r
+            w = width in dots
+            h = height in dots  
+            t = border thickness in dots
+            c = line color (B=black, W=white)
+            r = degree of corner rounding (0-8)
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.GraphicBoxCommand.Width">
+            <summary>Box width in dots.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.GraphicBoxCommand.Height">
+            <summary>Box height in dots.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.GraphicBoxCommand.Thickness">
+            <summary>Border thickness in dots.</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.GraphicBoxCommand.Color">
+            <summary>Line color (B=black, W=white).</summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.GraphicBoxCommand.Rounding">
+            <summary>Corner rounding (0-8).</summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.GraphicDiagonalCommand">
+            <summary>
+            ^GD - Graphic Diagonal Line command.
+            Format: ^GDw,h,t,c,o
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.GraphicCircleCommand">
+            <summary>
+            ^GC - Graphic Circle command.
+            Format: ^GCd,t,c
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.GraphicEllipseCommand">
+            <summary>
+            ^GE - Graphic Ellipse command.
+            Format: ^GEw,h,t,c
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.HexGraphicBaseCommand">
+            <summary>
+            Base class for graphic commands that parse hex data.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.GraphicFieldCommand">
+            <summary>
+            ^GF - Graphic Field command. Downloads and displays graphic images.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.DownloadGraphicsCommand">
+            <summary>
+            ~DG - Download Graphics. Downloads a graphic to the printer's cache.
+            Format: ~DGd:o.x,t,w,data
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.RecallGraphicCommand">
+            <summary>
+            ^XG - Recall Graphic. Recalls a graphic from cache.
+            Format: ^XGd:o.x,mx,my
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.ImageMoveCommand">
+            <summary>
+            ^IM - Image Move. Loads an image from storage.
+            Format: ^IMd:o.x
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.ZplCommand">
+            <summary>
+            Abstract base class for all ZPL commands.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Commands.ZplCommand.CommandCode">
+            <summary>
+            The ZPL command code (e.g., "FO", "FD", "A").
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Commands.ZplCommand.Execute(ZplRenderer.Rendering.RenderContext)">
+            <summary>
+            Executes the command using the provided render context.
+            </summary>
+            <param name="context">The rendering context containing state and graphics.</param>
+        </member>
+        <member name="M:ZplRenderer.Commands.ZplCommand.Parse(System.String)">
+            <summary>
+            Parses the command parameters from the raw parameter string.
+            </summary>
+            <param name="parameters">The raw parameter string from the ZPL token.</param>
+        </member>
+        <member name="M:ZplRenderer.Commands.ZplCommand.SplitParameters(System.String)">
+            <summary>
+            Helper method to split comma-separated parameters.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Commands.ZplCommand.ParseInt(System.String,System.Int32)">
+            <summary>
+            Helper method to parse an integer parameter with a default value.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Commands.ZplCommand.ParseChar(System.String,System.Char)">
+            <summary>
+            Helper method to parse a character parameter with a default value.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Commands.ZplCommand.ParseYesNo(System.String,System.Boolean)">
+            <summary>
+            Helper method to parse a boolean (Y/N) parameter.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Core.ZplLabel">
+            <summary>
+            Represents a parsed ZPL label containing all commands to render.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.Commands">
+            <summary>
+            List of parsed ZPL commands in execution order.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.WidthDots">
+            <summary>
+            Label width in dots (set by ^PW command or default).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.HeightDots">
+            <summary>
+            Label height in dots (set by ^LL command or default).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.LabelHomeX">
+            <summary>
+            Label home X offset (set by ^LH command).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.LabelHomeY">
+            <summary>
+            Label home Y offset (set by ^LH command).
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Core.ZplParser">
+            <summary>
+            Parses ZPL code and creates a ZplLabel with all commands.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.#ctor">
+            <summary>
+            Creates a new ZPL parser.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.Parse(System.String)">
+            <summary>
+            Parses ZPL code and returns a label with parsed commands.
+            </summary>
+            <param name="zplCode">The raw ZPL code string.</param>
+            <returns>A ZplLabel containing all parsed commands.</returns>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.Validate(System.String)">
+            <summary>
+            Validates ZPL code and returns any warnings or errors.
+            </summary>
+            <param name="zplCode">The raw ZPL code string.</param>
+            <returns>List of validation messages.</returns>
+        </member>
+        <member name="T:ZplRenderer.Core.ZplToken">
+            <summary>
+            Represents a tokenized ZPL command.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplToken.Prefix">
+            <summary>
+            The command prefix (^ or ~).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplToken.CommandCode">
+            <summary>
+            The command code (e.g., FO, FD, A, GB, BC, BQ).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplToken.Parameters">
+            <summary>
+            The raw parameters string after the command code.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplToken.RawContent">
+            <summary>
+            Original raw content of the token.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Core.ZplTokenizer">
+            <summary>
+            Tokenizes ZPL code into command tokens.
+            Uses a hybrid approach: Regex for standard commands, manual parsing for data-heavy commands.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.Tokenize(System.String)">
+            <summary>
+            Tokenizes ZPL code into individual command tokens.
+            </summary>
+            <param name="zplCode">The raw ZPL code string.</param>
+            <returns>List of ZPL tokens.</returns>
+        </member>
+        <member name="T:ZplRenderer.Rendering.IZplRenderer">
+            <summary>
+            Interface for ZPL label renderers.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.IZplRenderer.Render(ZplRenderer.Core.ZplLabel,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Renders a ZPL label to a bitmap.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.IZplRenderer.RenderMm(ZplRenderer.Core.ZplLabel,System.Single,System.Single,System.Int32)">
+            <summary>
+            Renders a ZPL label to a bitmap with millimeter dimensions.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Rendering.BitmapRenderer">
+            <summary>
+            Renders ZPL labels to bitmaps using SkiaSharp.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.BitmapRenderer.BackgroundColor">
+            <summary>
+            Background color for the label (default white).
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.BitmapRenderer.Render(ZplRenderer.Core.ZplLabel,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Renders a ZPL label to a bitmap.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.BitmapRenderer.RenderMm(ZplRenderer.Core.ZplLabel,System.Single,System.Single,System.Int32)">
+            <summary>
+            Renders a ZPL label to a bitmap with millimeter dimensions.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.BitmapRenderer.RenderInches(ZplRenderer.Core.ZplLabel,System.Single,System.Single,System.Int32)">
+            <summary>
+            Renders a ZPL label to a bitmap with inch dimensions.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.BitmapRenderer.SaveToFile(SkiaSharp.SKBitmap,System.String,SkiaSharp.SKEncodedImageFormat,System.Int32)">
+            <summary>
+            Saves a rendered bitmap to a file.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Rendering.FieldOrientation">
+            <summary>
+            Orientation/rotation values for ZPL fields.
+            </summary>
+        </member>
+        <member name="F:ZplRenderer.Rendering.FieldOrientation.Normal">
+            <summary>Normal orientation (0 degrees).</summary>
+        </member>
+        <member name="F:ZplRenderer.Rendering.FieldOrientation.Rotated90">
+            <summary>Rotated 90 degrees clockwise.</summary>
+        </member>
+        <member name="F:ZplRenderer.Rendering.FieldOrientation.Inverted">
+            <summary>Inverted (180 degrees).</summary>
+        </member>
+        <member name="F:ZplRenderer.Rendering.FieldOrientation.Rotated270">
+            <summary>Rotated 270 degrees (or 90 counter-clockwise).</summary>
+        </member>
+        <member name="T:ZplRenderer.Rendering.RenderContext">
+            <summary>
+            Maintains rendering state during ZPL label processing.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.Canvas">
+            <summary>
+            The SKCanvas object used for drawing.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.CurrentX">
+            <summary>
+            Current field origin X position in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.CurrentY">
+            <summary>
+            Current field origin Y position in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.LabelHomeX">
+            <summary>
+            Label home X offset in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.LabelHomeY">
+            <summary>
+            Label home Y offset in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.GraphicsCache">
+            <summary>
+            Cache for downloaded graphics (~DG).
+            Key: Image name (e.g. "LOGO.GRF"), Value: SkiaSharp Bitmap.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.DpiX">
+            <summary>
+            Horizontal DPI of the target printer.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.DpiY">
+            <summary>
+            Vertical DPI of the target printer.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.CustomDpi">
+            <summary>
+            Custom DPI override (null = use DpiX/DpiY).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.EffectiveDpi">
+            <summary>
+            Effective DPI for rendering.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.ScaleFactor">
+            <summary>
+            Scale factor based on 203 DPI baseline.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.ScaledX">
+            <summary>
+            Scaled Absolute X position.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.ScaledY">
+            <summary>
+            Scaled Absolute Y position.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.PrintWidth">
+            <summary>
+            Label print width in dots (set by ^PW).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.LabelLength">
+            <summary>
+            Label length in dots (set by ^LL).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.MediaDarkness">
+            <summary>
+            Media darkness level (-30 to 30) (set by ^MD).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.PrintSpeed">
+            <summary>
+            Print speed (set by ^PR).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.FontHeight">
+            <summary>
+            Current font height in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.ScaledFontHeight">
+            <summary>
+            Scaled font height.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.FontWidth">
+            <summary>
+            Current font width in dots (0 = auto).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.FieldOrientation">
+            <summary>
+            Current field orientation.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.ModuleWidth">
+            <summary>
+            Default barcode module width in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.ModuleRatio">
+            <summary>
+            Default barcode module ratio (wide to narrow).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.BarcodeHeight">
+            <summary>
+            Default barcode height in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.FieldData">
+            <summary>
+            Pending field data (set by ^FD, used by next printable element).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.ZplFontName">
+            <summary>
+            Current ZPL font name (0-9, A-Z).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.FieldBlockWidth">
+            <summary>
+            Field Block width in dots (0 = disabled). Set by ^FB.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.FieldBlockMaxLines">
+            <summary>
+            Field Block max lines.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.FieldBlockAlignment">
+            <summary>
+            Field Block text alignment (L, C, R, J).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.IsBaselinePosition">
+            <summary>
+            Field Typeset (baseline) positioning mode. Set by ^FT.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.IsReversePrint">
+            <summary>
+            Field Reverse Print (white on black). Set by ^FR.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.NextFieldRenderAction">
+            <summary>
+            Action to render the next field (e.g. Barcode).
+            If null, default Text rendering is used.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.AbsoluteX">
+            <summary>
+            Gets the absolute X position including label home offset.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.AbsoluteY">
+            <summary>
+            Gets the absolute Y position including label home offset.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.CurrentFont">
+            <summary>
+            Current SKFont for text rendering.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.RenderContext.UpdateFont(System.String,System.Int32,System.Int32,ZplRenderer.Rendering.FieldOrientation)">
+            <summary>
+            Updates the current font based on ZPL font settings.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.RenderContext.ParseOrientation(System.Char)">
+            <summary>
+            Parses orientation character to FieldOrientation enum.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.RenderContext.CreatePaint(SkiaSharp.SKColor,System.Boolean,System.Single)">
+            <summary>
+            Creates a paint for drawing with the specified color.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.RenderContext.CreateTextPaint(SkiaSharp.SKColor)">
+            <summary>
+            Creates a text paint for drawing text.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Utils.ZplFontInfo">
+            <summary>
+            ZPL font characteristics including system font name and style.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Utils.ZplFontInfo.AspectRatio">
+            <summary>
+            Width to height ratio for this font (used when width is not specified).
+            ZPL bitmap fonts have specific aspect ratios.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Utils.FontMappings">
+            <summary>
+            Provides mapping between ZPL font identifiers and system font families.
+            ZPL fonts are designated by single letters (A-Z) or digits (0-9).
+            Font 0 is the scalable "Swiss 721" style font.
+            Fonts A-H are bitmap fonts with specific sizes.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Utils.FontMappings.GetSystemFont(System.String)">
+            <summary>
+            Gets the system font name for a ZPL font identifier.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Utils.FontMappings.GetFontInfo(System.String)">
+            <summary>
+            Gets detailed font information for a ZPL font identifier.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.ZplEngine">
+            <summary>
+            Main entry point for the ZPL Renderer library.
+            Parses ZPL code and renders label previews.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.ZplEngine.DefaultDpi">
+            <summary>
+            Default DPI for rendering (203 is standard for many Zebra printers).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.ZplEngine.DefaultWidthDots">
+            <summary>
+            Default label width in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.ZplEngine.DefaultHeightDots">
+            <summary>
+            Default label height in dots.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.ZplEngine.BackgroundColor">
+            <summary>
+            Background color for rendered labels.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.#ctor">
+            <summary>
+            Creates a new ZPL Engine instance.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.Render(System.String)">
+            <summary>
+            Parses and renders ZPL code to a bitmap using default dimensions.
+            </summary>
+            <param name="zplCode">The ZPL code to render.</param>
+            <returns>A bitmap preview of the label.</returns>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.Render(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Parses and renders ZPL code to a bitmap with specified dimensions in dots.
+            </summary>
+            <param name="zplCode">The ZPL code to render.</param>
+            <param name="widthDots">Label width in dots.</param>
+            <param name="heightDots">Label height in dots.</param>
+            <param name="dpi">Printer DPI (default 203).</param>
+            <returns>A bitmap preview of the label.</returns>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.RenderMm(System.String,System.Single,System.Single,System.Int32)">
+            <summary>
+            Parses and renders ZPL code to a bitmap with dimensions in millimeters.
+            </summary>
+            <param name="zplCode">The ZPL code to render.</param>
+            <param name="widthMm">Label width in millimeters.</param>
+            <param name="heightMm">Label height in millimeters.</param>
+            <param name="dpi">Printer DPI (default 203).</param>
+            <returns>A bitmap preview of the label.</returns>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.RenderInches(System.String,System.Single,System.Single,System.Int32)">
+            <summary>
+            Parses and renders ZPL code to a bitmap with dimensions in inches.
+            </summary>
+            <param name="zplCode">The ZPL code to render.</param>
+            <param name="widthInches">Label width in inches.</param>
+            <param name="heightInches">Label height in inches.</param>
+            <param name="dpi">Printer DPI (default 203).</param>
+            <returns>A bitmap preview of the label.</returns>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.Parse(System.String)">
+            <summary>
+            Parses ZPL code without rendering.
+            </summary>
+            <param name="zplCode">The ZPL code to parse.</param>
+            <returns>The parsed label representation.</returns>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.Validate(System.String)">
+            <summary>
+            Validates ZPL code and returns any warnings or errors.
+            </summary>
+            <param name="zplCode">The ZPL code to validate.</param>
+            <returns>Collection of validation messages (empty if valid).</returns>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.RenderToFile(System.String,System.String,System.Int32,System.Int32,System.Int32,SkiaSharp.SKEncodedImageFormat)">
+            <summary>
+            Renders ZPL code and saves directly to a file.
+            </summary>
+            <param name="zplCode">The ZPL code to render.</param>
+            <param name="filePath">Path to save the image.</param>
+            <param name="widthDots">Label width in dots.</param>
+            <param name="heightDots">Label height in dots.</param>
+            <param name="dpi">Printer DPI.</param>
+            <param name="format">Image format (default PNG).</param>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.MmToDots(System.Single,System.Int32)">
+            <summary>
+            Converts millimeters to dots for a given DPI.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.InchesToDots(System.Single,System.Int32)">
+            <summary>
+            Converts inches to dots for a given DPI.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.ZplEngine.DotsToMm(System.Int32,System.Int32)">
+            <summary>
+            Converts dots to millimeters for a given DPI.
+            </summary>
+        </member>
+    </members>
+</doc>

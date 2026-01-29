@@ -1,0 +1,12 @@
+C:\Dev\libreria zpl\src\ZplRenderer\bin\Release\netstandard2.0\ZplRenderer.deps.json
+C:\Dev\libreria zpl\src\ZplRenderer\bin\Release\netstandard2.0\ZplRenderer.dll
+C:\Dev\libreria zpl\src\ZplRenderer\bin\Release\netstandard2.0\ZplRenderer.pdb
+C:\Dev\libreria zpl\src\ZplRenderer\bin\Release\netstandard2.0\ZplRenderer.xml
+C:\Dev\libreria zpl\src\ZplRenderer\obj\Release\netstandard2.0\ZplRenderer.csproj.AssemblyReference.cache
+C:\Dev\libreria zpl\src\ZplRenderer\obj\Release\netstandard2.0\ZplRenderer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Dev\libreria zpl\src\ZplRenderer\obj\Release\netstandard2.0\ZplRenderer.AssemblyInfoInputs.cache
+C:\Dev\libreria zpl\src\ZplRenderer\obj\Release\netstandard2.0\ZplRenderer.AssemblyInfo.cs
+C:\Dev\libreria zpl\src\ZplRenderer\obj\Release\netstandard2.0\ZplRenderer.csproj.CoreCompileInputs.cache
+C:\Dev\libreria zpl\src\ZplRenderer\obj\Release\netstandard2.0\ZplRenderer.dll
+C:\Dev\libreria zpl\src\ZplRenderer\obj\Release\netstandard2.0\ZplRenderer.xml
+C:\Dev\libreria zpl\src\ZplRenderer\obj\Release\netstandard2.0\ZplRenderer.pdb
