@@ -44,35 +44,38 @@ namespace ZplRenderer.Rendering
 
             var bitmap = new SKBitmap(pixelWidth, pixelHeight, SKColorType.Rgba8888, SKAlphaType.Premul);
 
-            using (var canvas = new SKCanvas(bitmap))
+            // 1. Build Model (Execute Commands)
+            var elements = new System.Collections.Generic.List<ZplRenderer.Elements.ZplElement>();
+            using (var context = new RenderContext
             {
-                // Clear with background color
-                canvas.Clear(BackgroundColor);
-
-                // Create render context
-                using (var context = new RenderContext
+                // Canvas is no longer used during command execution
+                DpiX = dpi,
+                DpiY = dpi,
+                LabelHomeX = label.LabelHomeX,
+                LabelHomeY = label.LabelHomeY
+            })
+            {
+                foreach (var command in label.Commands)
                 {
-                    Canvas = canvas,
-                    DpiX = dpi,
-                    DpiY = dpi,
-                    LabelHomeX = label.LabelHomeX,
-                    LabelHomeY = label.LabelHomeY
-                })
-                {
-                    // Execute all commands
-                    foreach (var command in label.Commands)
+                    try
                     {
-                        try
-                        {
-                            command.Execute(context);
-                        }
-                        catch (Exception)
-                        {
-                            // Log or handle individual command errors
-                            // Continue rendering other commands
-                        }
+                        command.Execute(context);
+                    }
+                    catch (Exception)
+                    {
+                        // Log error
                     }
                 }
+                elements.AddRange(context.Elements);
+            }
+
+            // 2. Render Model (Draw Elements)
+            using (var canvas = new SKCanvas(bitmap))
+            {
+                canvas.Clear(BackgroundColor);
+                
+                var elementRenderer = new ElementRenderer();
+                elementRenderer.Render(elements, canvas, dpi, dpi);
             }
 
             return bitmap;

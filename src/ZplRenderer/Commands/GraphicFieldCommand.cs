@@ -92,46 +92,25 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            var canvas = context.Canvas;
-            if (canvas == null) return;
+            // Create bitmap from hex
+            var bitmap = CreateBitmapFromHex(HexData, BytesPerRow, TotalBytes);
+            if (bitmap == null) return;
 
-            float x = context.ScaledX;
-            float y = context.ScaledY;
-            float scale = context.ScaleFactor;
-
-            try
+            var graphicElement = new ZplRenderer.Elements.ZplGraphicImage
             {
-                using (var bitmap = CreateBitmapFromHex(HexData, BytesPerRow, TotalBytes))
-                {
-                    if (bitmap == null) return;
-
-                    canvas.Save();
-                    try
-                    {
-                        if (context.FieldOrientation != FieldOrientation.Normal)
-                        {
-                            canvas.Translate(x, y);
-                            canvas.RotateDegrees((int)context.FieldOrientation);
-                            // Draw scaled
-                            var destRect = SKRect.Create(0, 0, bitmap.Width * scale, bitmap.Height * scale);
-                            canvas.DrawBitmap(bitmap, destRect);
-                        }
-                        else
-                        {
-                            var destRect = SKRect.Create(x, y, bitmap.Width * scale, bitmap.Height * scale);
-                            canvas.DrawBitmap(bitmap, destRect);
-                        }
-                    }
-                    finally
-                    {
-                        canvas.Restore();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                // Placeholder on error
-            }
+                X = context.AbsoluteX,
+                Y = context.AbsoluteY,
+                Bitmap = bitmap,
+                Orientation = context.FieldOrientation, 
+                ScaleX = 1, // ^GF usually implies 1:1 unless scaled by context? ZPL manual says it's pixel data.
+                ScaleY = 1, 
+                OriginType = ZplRenderer.Elements.ElementOriginType.TopLeft
+            };
+            
+            // If scale factor was used for DPI, we might need to apply it here?
+            // For now, keeping 1:1 pixel mapping.
+            
+            context.Elements.Add(graphicElement);
         }
 
         public override void Parse(string parameters)
@@ -245,30 +224,18 @@ namespace ZplRenderer.Commands
 
             if (bitmap == null) return;
 
-            var canvas = context.Canvas;
-            float x = context.ScaledX;
-            float y = context.ScaledY;
-
-            canvas.Save();
-            try
+            var graphic = new ZplRenderer.Elements.ZplGraphicImage
             {
-                int mx = MagnificationX > 0 ? MagnificationX : 1;
-                int my = MagnificationY > 0 ? MagnificationY : 1;
-                float finalScaleX = mx * context.ScaleFactor;
-                float finalScaleY = my * context.ScaleFactor;
+                X = context.AbsoluteX,
+                Y = context.AbsoluteY,
+                Bitmap = bitmap,
+                ScaleX = MagnificationX,
+                ScaleY = MagnificationY,
+                Orientation = context.FieldOrientation, // Should probably apply rotation if needed
+                OriginType = ZplRenderer.Elements.ElementOriginType.TopLeft // Image usually TopLeft
+            };
 
-                // Scale around the insertion point or simply scale the bitmap draw?
-                // ZPL ^XG usually magnifies. 
-                // We should translate to x,y then scale.
-                
-                canvas.Translate(x, y);
-                canvas.Scale(finalScaleX, finalScaleY);
-                canvas.DrawBitmap(bitmap, 0, 0);
-            }
-            finally
-            {
-                canvas.Restore();
-            }
+            context.Elements.Add(graphic);
         }
 
         public override void Parse(string parameters)
@@ -305,13 +272,18 @@ namespace ZplRenderer.Commands
 
             if (bitmap == null) return;
 
-            var canvas = context.Canvas;
-            float x = context.ScaledX;
-            float y = context.ScaledY;
-            float scale = context.ScaleFactor;
+            var graphic = new ZplRenderer.Elements.ZplGraphicImage
+            {
+                X = context.AbsoluteX,
+                Y = context.AbsoluteY,
+                Bitmap = bitmap,
+                ScaleX = 1, 
+                ScaleY = 1,
+                Orientation = context.FieldOrientation,
+                OriginType = ZplRenderer.Elements.ElementOriginType.TopLeft
+            };
             
-            var destRect = SKRect.Create(x, y, bitmap.Width * scale, bitmap.Height * scale);
-            canvas.DrawBitmap(bitmap, destRect);
+            context.Elements.Add(graphic);
         }
 
         public override void Parse(string parameters)

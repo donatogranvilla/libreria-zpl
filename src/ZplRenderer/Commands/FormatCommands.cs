@@ -51,19 +51,16 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            // Execute deferred render action if present (e.g. Barcode)
-            if (context.NextFieldRenderAction != null)
-            {
-                context.NextFieldRenderAction(context);
-                context.NextFieldRenderAction = null;
-            }
-            // Otherwise, if there is text data, render it as text
-            else if (!string.IsNullOrEmpty(context.FieldData))
-            {
-                new TextRenderCommand().Execute(context);
-            }
+            // PendingBarcode should have been consumed by ^FD.
+            // If it wasn't, it implies a malformed ZPL sequence (e.g. ^BC without ^FD).
+            // In that case, we should probably discard it or render a placeholder?
+            // ZPL spec says if no ^FD, command is ignored.
+            context.PendingBarcode = null;
 
             // Clear pending field data after field is complete
+            // (Wait, ZplCommand logic usually clears it or the Parser handles it? 
+            // In the previous logic, FieldData was assigned in ^FD.
+            // Here we just ensure we reset for the next field.
             context.FieldData = null;
         }
 

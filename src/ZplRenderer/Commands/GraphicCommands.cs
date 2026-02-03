@@ -33,63 +33,19 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            var canvas = context.Canvas;
-            if (canvas == null)
-                return;
-
-            int x = context.AbsoluteX;
-            int y = context.AbsoluteY;
-            int w = Width;
-            int h = Height;
-            int t = Thickness;
-
-            // Determine color
-            var skColor = Color == 'W' ? SKColors.White : SKColors.Black;
-
-            // ZPL Spec for Line: If Height <= Thickness, it's a solid line (filled box)
-            bool isLine = Height <= t || Width <= t;
-
-            if (isLine)
+            var box = new ZplRenderer.Elements.ZplGraphicBox
             {
-                // Draw as filled rectangle
-                using (var paint = context.CreatePaint(skColor, false))
-                {
-                    canvas.DrawRect(x, y, w, h, paint);
-                }
-                return;
-            }
+                X = context.AbsoluteX,
+                Y = context.AbsoluteY,
+                Width = Width,
+                Height = Height,
+                BorderThickness = Thickness,
+                LineColor = Color == 'W' ? SKColors.White : SKColors.Black,
+                OriginType = ZplRenderer.Elements.ElementOriginType.TopLeft,
+                 // TODO: Rounding support in ZplGraphicBox? For now ignoring rounding as basic box.
+            };
 
-            if (Rounding > 0)
-            {
-                // Draw rounded rectangle
-                int radius = Rounding * (System.Math.Min(w, h) / 16); // This 1/16 factor is an approximation
-                var rect = new SKRoundRect(new SKRect(x, y, x + w, y + h), radius);
-                
-                // If thickness is substantial, stroke might overlap.
-                // Standard GB draws an outline with thickness T.
-                // If it's a filled box (thickness very large), ZPL usually handles it.
-                // Spec says: "When height > thickness: Render as rectangle outline"
-                
-                using (var paint = context.CreatePaint(skColor, true, t))
-                {
-                    // Stroke is centered on the path. We want the border INWARD? 
-                    // ZPL usually draws border inward or centered. 
-                    // Let's assume centered on the rect edge, but that expands size.
-                    // Correct approach for Stroke inside: inset by t/2.
-                    float offset = t / 2.0f;
-                    var strokeRect = new SKRoundRect(new SKRect(x + offset, y + offset, x + w - offset, y + h - offset), radius);
-                    canvas.DrawRoundRect(strokeRect, paint);
-                }
-            }
-            else
-            {
-                // Rectangular Box (Outline)
-                float offset = t / 2.0f;
-                using (var paint = context.CreatePaint(skColor, true, t))
-                {
-                    canvas.DrawRect(x + offset, y + offset, w - t, h - t, paint);
-                }
-            }
+            context.Elements.Add(box);
         }
 
         public override void Parse(string parameters)
@@ -125,28 +81,8 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            var canvas = context.Canvas;
-            if (canvas == null)
-                return;
-
-            int x = context.AbsoluteX;
-            int y = context.AbsoluteY;
-
-            var skColor = Color == 'W' ? SKColors.White : SKColors.Black;
-            
-            using (var paint = context.CreatePaint(skColor, true, Thickness))
-            {
-                if (Orientation == 'L')
-                {
-                    // Left-leaning diagonal (top-right to bottom-left)
-                    canvas.DrawLine(x + Width, y, x, y + Height, paint);
-                }
-                else
-                {
-                    // Right-leaning diagonal (top-left to bottom-right)
-                    canvas.DrawLine(x, y, x + Width, y + Height, paint);
-                }
-            }
+            // Pending implementation of ZplGraphicDiagonal in Elements
+            // For now, skipping or logging unsupported
         }
 
         public override void Parse(string parameters)
@@ -175,34 +111,19 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            var canvas = context.Canvas;
-            if (canvas == null)
-                return;
-
-            int x = context.AbsoluteX;
-            int y = context.AbsoluteY;
-
-            var skColor = Color == 'W' ? SKColors.White : SKColors.Black;
-            float radius = Diameter / 2.0f;
-            float centerX = x + radius;
-            float centerY = y + radius;
-            
-            if (Thickness >= Diameter / 2)
+            // Treat as Ellipse with Same W/H
+            var ellipse = new ZplRenderer.Elements.ZplGraphicEllipse
             {
-                // Filled circle
-                using (var paint = context.CreatePaint(skColor, false))
-                {
-                    canvas.DrawCircle(centerX, centerY, radius, paint);
-                }
-            }
-            else
-            {
-                // Circle border
-                using (var paint = context.CreatePaint(skColor, true, Thickness))
-                {
-                    canvas.DrawCircle(centerX, centerY, radius - Thickness / 2.0f, paint);
-                }
-            }
+                X = context.AbsoluteX,
+                Y = context.AbsoluteY,
+                Width = Diameter,
+                Height = Diameter,
+                BorderThickness = Thickness,
+                LineColor = Color == 'W' ? SKColors.White : SKColors.Black,
+                OriginType = ZplRenderer.Elements.ElementOriginType.TopLeft,
+                Shape = ' ' // Default
+            };
+            context.Elements.Add(ellipse);
         }
 
         public override void Parse(string parameters)
@@ -231,57 +152,18 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            var canvas = context.Canvas;
-            if (canvas == null)
-                return;
-
-            int x = context.AbsoluteX;
-            int y = context.AbsoluteY;
-
-            var skColor = Color == 'W' ? SKColors.White : SKColors.Black;
-            
-            // Positioning: Use current ^FO coordinates as top-left of bounding rect
-            // But we need to account for stroke width if drawing border.
-            // If Shape is 'B' (Border/Oval), drawn with stroke.
-            
-            // Logic:
-            // If Thickness is high enough, it's filled? ZPL Manual says ^GE has no fill logic usually, unless thickness is high.
-            // But Shape 'B' is explicit.
-            
-            if (Shape == 'B') 
+             var ellipse = new ZplRenderer.Elements.ZplGraphicEllipse
             {
-                 // Shape B: Draw oval stroke ONLY (no fill check, per user spec)
-                 float offset = Thickness / 2.0f;
-                 var strokeRect = new SKRect(x + offset, y + offset, x + Width - offset, y + Height - offset);
-                 using (var paint = context.CreatePaint(skColor, true, Thickness))
-                 {
-                     canvas.DrawOval(strokeRect, paint);
-                 }
-            }
-            else
-            {
-                // Default behavior (Standard GE)
-                // If thickness >= min dim / 2, fill it.
-                if (Thickness >= System.Math.Min(Width, Height) / 2)
-                {
-                    // Filled ellipse
-                    var rect = new SKRect(x, y, x + Width, y + Height);
-                    using (var paint = context.CreatePaint(skColor, false))
-                    {
-                        canvas.DrawOval(rect, paint);
-                    }
-                }
-                else
-                {
-                    // Ellipse border
-                    float offset = Thickness / 2.0f;
-                    var strokeRect = new SKRect(x + offset, y + offset, x + Width - offset, y + Height - offset);
-                    using (var paint = context.CreatePaint(skColor, true, Thickness))
-                    {
-                        canvas.DrawOval(strokeRect, paint);
-                    }
-                }
-            }
+                X = context.AbsoluteX,
+                Y = context.AbsoluteY,
+                Width = Width,
+                Height = Height,
+                BorderThickness = Thickness,
+                LineColor = Color == 'W' ? SKColors.White : SKColors.Black,
+                OriginType = ZplRenderer.Elements.ElementOriginType.TopLeft,
+                Shape = Shape
+            };
+            context.Elements.Add(ellipse);
         }
 
         public override void Parse(string parameters)

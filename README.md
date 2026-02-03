@@ -1,123 +1,89 @@
-# ZplRenderer - Libreria di Rendering ZPL per .NET
+# ZplRenderer - ZPL Rendering Library for .NET
 
-**ZplRenderer** è una libreria C# progettata per interpretare comandi ZPL (Zebra Programming Language) e renderizzare anteprime di etichette in formato bitmap. La libreria è ottimizzata per l'uso industriale, supportando una vasta gamma di barcode 1D e 2D, gestione avanzata dei font e comandi grafici.
+**ZplRenderer** is a high-performance C# library designed to interpret Zebra Programming Language (ZPL) commands and render high-quality label previews as bitmaps. Built on **SkiaSharp**, it offers cross-platform compatibility (Windows, Linux, Docker) and industrial-grade rendering accuracy.
 
-Basata su **SkiaSharp** per prestazioni elevate e compatibilità cross-platform (Windows, Linux, Docker).
+This project is open-source and released under the **Unlicense** (Public Domain).
 
-## Caratteristiche Principali
+## Key Features
 
-*   **Backend SkiaSharp**: Rendering veloce e portabile.
-*   **Barcode Industriali**: Supporto completo tramite ZXing per:
-    *   **2D**: Data Matrix (`^BX`), QR Code (`^BQ`), PDF417 (`^B7`), Aztec (`^B0`), MaxiCode (`^BD`).
-    *   **1D**: Code 128 (`^BC`), Code 39 (`^B3`), EAN-13 (`^BE`), UPC-A (`^BU`), Code 93 (`^BA`).
-*   **Testo Avanzato**: 
-    *   Gestione font scalabili (`^A@`).
-    *   Word wrapping automatico e allineamento (`^FB`).
-    *   Supporto caratteri internazionali (`^CI`).
-*   **Grafica**:
-    *   Forme primitive: Box (`^GB`), Ellissi (`^GE`), Cerchi (`^GC`).
-    *   Immagini: Download (`~DG`) e richiamo (`^XG`) di grafica esadecimale.
+- **SkiaSharp Backend**: Fast, portable, and high-quality graphics rendering.
+- **Accurate Text Rendering**: 
+    - Support for ZPL fonts (`^A`, `^CF`).
+    - Smart font scaling (`^A0` condensed vs regular widths).
+    - Baseline positioning support (`^FT`) vs Top-Left positioning (`^FO`).
+    - Field Block (`^FB`) support for wrapping and alignment.
+- **Industrial Barcodes**: Full support via ZXing.Net for:
+    - **1D**: Code 128 (`^BC`), Code 39 (`^B3`), EAN-13 (`^BE`), UPC-A (`^BU`), Code 93 (`^BA`).
+    - **2D**: Data Matrix (`^BX`), QR Code (`^BQ`), PDF417 (`^B7`), Aztec (`^B0`), MaxiCode (`^BD`).
+    - Correct Handling of ZPL Rotations (0, 90, 180, 270 degrees).
+- **Shapes & Graphics**:
+    - Graphic Boxes (`^GB`).
+    - Graphic Ellipses (`^GE`) with Shape support (Fill/Stroke).
+    - Graphic Circles (`^GC`).
 
-## Installazione
+## Usage
 
-Aggiungi il riferimento al progetto o compila la libreria e includi la DLL.
-Assicurati di avere i seguenti pacchetti NuGet installati nel tuo progetto (la libreria li gestisce come dipendenze):
+### Installation
+
+Ensure your project references the necessary packages:
 
 ```xml
 <PackageReference Include="SkiaSharp" Version="2.88.7" />
 <PackageReference Include="ZXing.Net.Bindings.SkiaSharp" Version="0.16.14" />
 ```
 
-## Integrazione e Utilizzo Base
-
-Utilizzare la classe `ZplEngine` per convertire il codice ZPL in una `SKBitmap`.
+### Basic Example
 
 ```csharp
 using ZplRenderer;
 using SkiaSharp;
 
-// 1. Istanzia il motore
+// 1. Instantiate the Engine
 var engine = new ZplEngine();
 
-// 2. Definisci il codice ZPL
-string zplCode = "^XA^FO50,50^ADN,36,20^FDHello World^FS^XZ";
+// 2. Define ZPL Code
+string zplCode = "^XA^FO50,50^A0N,50,50^FDHello World^FS^XZ";
 
-// 3. Renderizza
-// Il metodo restituisce una SKBitmap che puoi salvare o mostrare
+// 3. Render to Bitmap
 using (SKBitmap bitmap = engine.Render(zplCode))
 {
-    // Salva su file
+    // Save to file
     using (var image = SKImage.FromBitmap(bitmap))
     using (var data = image.Encode(SKEncodedImageFormat.Png, 100))
-    using (var stream = File.OpenWrite("label.png"))
+    using (var stream = System.IO.File.OpenWrite("label.png"))
     {
         data.SaveTo(stream);
     }
 }
 ```
 
-## Esempi di Uso Industriale
+## Architecture
 
-### 1. Etichetta di Spedizione con DataMatrix e Code128
+The library follows a **Parser-Model-Drawer** architecture to separate concerns and allow easy extensibility.
 
-Questo esempio mostra un'etichetta 4x6 pollici (approx 800x1200 punti a 203 DPI) con diverse tipologie di barcode e formattazione testo.
+1.  **Parser**: The `ZplInterpreter` parses the raw string and identifies commands.
+2.  **Model**: Commands populate a `RenderContext` and build a list of abstract `ZplElement` objects (e.g., `ZplTextField`, `ZplBarcode`).
+    - This separation allows the ZPL logic (state machines, coordinate math) to be decoupled from specific drawing calls.
+3.  **Renderer**: The `ElementRenderer` iterates through the list of elements.
+4.  **Drawers**: A `DrawerFactory` matches each `ZplElement` to a specific `IElementDrawer` implementation (e.g., `BarcodeDrawer`, `TextFieldDrawer`) which executes the actual SkiaSharp calls.
 
-```csharp
-string shippingLabelZpl = @"
-^XA
-^PW812
-^LL1218
-^FO50,50^A0N,50,50^FDSPEDIZIONE URGENTE^FS
-^FO50,120^GB700,5,5^FS
-^FO50,150^ADN,36,20^FDDestinatario:^FS
-^FO50,190^A0N,30,30^FB700,4,,L^FDAcme Corp Industrial\nVia dell'Innovazione 99\nMilano, MI 20100^FS
-^FO50,350^BCN,100,Y,N,N^FD1234567890^FS
-^FO600,350^BXN,10,200^FDPartNr:999-001^FS
-^FO50,500^A0N,40,40^FDNote: MANEGGIARE CON CURA^FS
-^XZ";
+### Directory Structure
 
-var engine = new ZplEngine();
-using (var label = engine.Render(shippingLabelZpl))
-{
-    // Logica di salvataggio...
-}
-```
+- `src/ZplRenderer/Commands`: ZPL Command implementations (Factory pattern).
+- `src/ZplRenderer/Elements`: Logical models representing label components.
+- `src/ZplRenderer/Drawers`: Rendering logic using SkiaSharp.
+- `src/ZplRenderer/Rendering`: Core pipeline and Context.
 
-### 2. Etichetta Alimentare con Grafica e QR Code
+## Contributing
 
-Esempio di etichetta ingredienti con logo (simulato) e Link QR.
+We welcome contributions! To add support for a new ZPL command:
 
-```csharp
-string foodLabelZpl = @"
-^XA
-^PW600
-^LL400
-^FO20,20^A0N,40,40^FDProdotto Biologico^FS
-^FO450,20^BQN,2,4^FDQA,https://certificazione-bio.com^FS
-^FO20,80^A0N,25,25^FB400,10,,L^FDIngredienti: Farina di grano tenero tipo 0, Acqua, Lievito naturale, Sale. Puo contenere tracce di soia.^FS
-^FO20,250^GB560,3,3^FS
-^FO20,270^ADN,18,10^FDLotto: L-2024-001  Scadenza: 31/12/2025^FS
-^XZ";
+1.  **Create a Command Class**: Inherit from `ZplCommand` in the `Commands` namespace. Implement `Parse()` and `Execute()`.
+2.  **Update Factory**: Register your new command code in `CommandFactory.cs`.
+3.  **Update Model (Optional)**: If the command draws something new, create a new `ZplElement` model.
+4.  **Create Drawer (Optional)**: If you added a new Element, implement `IElementDrawer` and register it in `DrawerFactory.cs`.
+5.  **Test**: Add a test case in `ZplRenderer.Tests`.
 
-var engine = new ZplEngine();
-using (var label = engine.Render(foodLabelZpl))
-{
-    // Logica di salvataggio...
-}
-```
+## License
 
-## Struttura del Progetto
-
-*   **ZplRenderer**: Libreria principale (.NET Standard 2.0).
-    *   `ZplEngine`: Entry point.
-    *   `Core`: Tokenizer e parsers.
-    *   `Commands`: Implementazioni dei comandi ZPL (Factory pattern).
-    *   `Rendering`: Contesto grafico e gestione SkiaSharp.
-*   **ZplRenderer.Tests**: Progetto di Unit Test (xUnit).
-
-## Contribuire
-
-Per aggiungere nuovi comandi:
-1.  Implementare una classe che eredita da `ZplCommand` o `BarcodeBaseCommand`.
-2.  Registrare il comando in `CommandFactory.cs`.
-3.  Aggiungere un test unitario in `ZplRenderer.Tests`.
+This software is released into the Public Domain (**Unlicense**). You are free to use, modify, distribute, and sell this software for any purpose. See `LICENSE` file for details.

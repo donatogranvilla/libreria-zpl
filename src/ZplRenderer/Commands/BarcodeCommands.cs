@@ -17,81 +17,7 @@ namespace ZplRenderer.Commands
             return !string.IsNullOrEmpty(data);
         }
 
-        protected void DrawRotated(SKCanvas canvas, SKBitmap bitmap, float x, float y, FieldOrientation orientation)
-        {
-            canvas.Save();
-            
-            // Transform to origin
-            canvas.Translate(x, y);
-            
-            // Rotate
-            if (orientation != FieldOrientation.Normal)
-                canvas.RotateDegrees((int)orientation);
 
-            // Check Clipping/Bounds (Simplified visual check logic)
-            // In a real scenario, we might want to check if the transformed rect intersects with the canvas clip.
-            // For now, we proceed to draw.
-            
-            // Draw bitmap at (0,0) relative to rotated origin
-            canvas.DrawBitmap(bitmap, 0, 0);
-            
-            canvas.Restore();
-        }
-
-        protected void DrawInterpretation(SKCanvas canvas, string text, float x, float y, int h, bool above, RenderContext ctx)
-        {
-            float textY = above ? y - 20 : y + h + 5;
-            using (var paint = ctx.CreateTextPaint(SKColors.Black))
-            {
-                paint.TextSize = 10 * ctx.ScaleFactor;
-                canvas.DrawText(text, x, textY, paint);
-            }
-        }
-
-        protected void DrawPlaceholder(SKCanvas canvas, float x, float y, float w, float h, RenderContext ctx)
-        {
-            using (var paint = ctx.CreatePaint(SKColors.Red, true, 2))
-            {
-                canvas.DrawRect(x, y, w, h, paint);
-            }
-        }
-
-        /// <summary>
-        /// Draws fallback text when barcode encoding fails.
-        /// Shows a bordered box with the data text inside.
-        /// </summary>
-        protected void DrawFallbackText(SKCanvas canvas, string data, float x, float y, float w, float h, RenderContext ctx)
-        {
-            // Draw border
-            using (var borderPaint = ctx.CreatePaint(SKColors.Black, true, 1))
-            {
-                canvas.DrawRect(x, y, w, h, borderPaint);
-            }
-            
-            // Draw text inside
-            using (var textPaint = ctx.CreateTextPaint(SKColors.Black))
-            {
-                textPaint.TextSize = Math.Min(h * 0.4f, 14 * ctx.ScaleFactor);
-                
-                // Center text vertically
-                var metrics = textPaint.FontMetrics;
-                float textY = y + (h / 2) - (metrics.Ascent + metrics.Descent) / 2;
-                
-                // Truncate if too long
-                string displayText = data;
-                float textWidth = textPaint.MeasureText(displayText);
-                if (textWidth > w - 4)
-                {
-                    while (displayText.Length > 3 && textPaint.MeasureText(displayText + "...") > w - 4)
-                    {
-                        displayText = displayText.Substring(0, displayText.Length - 1);
-                    }
-                    displayText += "...";
-                }
-                
-                canvas.DrawText(displayText, x + 2, textY, textPaint);
-            }
-        }
     }
 
     /// <summary>
@@ -107,48 +33,21 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode // Initialize pending barcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "BC", // Code 128
+                 Height = Height > 0 ? Height : context.BarcodeHeight,
+                 Orientation = Orientation,
+                 ModuleWidth = context.ModuleWidth,
+                 PrintInterpretationLine = PrintInterpretationLine,
+                 PrintInterpretationLineAbove = PrintInterpretationAbove,
+                 // Content to be filled by ^FD
+             };
         }
 
-        private void DrawBarcode(RenderContext context)
-        {
-            // Validation
-            if (!ValidateData(context.FieldData))
-            {
-                // Draw fallback/placeholder if invalid or empty
-                 return; 
-            }
-
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            
-            float scale = context.ScaleFactor;
-            // Use Height directly (it was scaled 1:1 by removal of 0.75f) - wait, RenderContext logic was fixed.
-            // Barcode commands usually take height in dots.
-            // We need to scale dots to pixels.
-            int h = (int)((Height > 0 ? Height : context.BarcodeHeight) * scale);
-
-            try
-            {
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.CODE_128,
-                    Options = new EncodingOptions { Height = h, PureBarcode = !PrintInterpretationLine, Margin = 0 },
-                    Renderer = new SKBitmapRenderer()
-                };
-                writer.Options.Width = (int)((context.FieldData.Length * 11 + 35) * context.ModuleWidth * scale);
-
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    // Alignment: Bars start at Y. 
-                    // DrawRotated handles translation to X,Y and then rotation.
-                    DrawRotated(canvas, bitmap, context.ScaledX, context.ScaledY, Orientation);
-                    
-                    if (PrintInterpretationLine && writer.Options.PureBarcode)
-                        DrawInterpretation(canvas, context.FieldData, context.ScaledX, context.ScaledY, h, PrintInterpretationAbove, context);
-                }
-            }
-            catch { DrawPlaceholder(canvas, context.ScaledX, context.ScaledY, 100 * scale, h, context); }
-        }
+        // DrawBarcode method removed as it is now handled by BarcodeDrawer via ZplElement
 
         protected override bool ValidateData(string data)
         {
@@ -180,35 +79,20 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "B3", // Code 39
+                 Height = Height > 0 ? Height : context.BarcodeHeight,
+                 Orientation = Orientation,
+                 ModuleWidth = context.ModuleWidth,
+                 PrintInterpretationLine = PrintInterpretationLine,
+                 PrintInterpretationLineAbove = PrintInterpretationAbove
+             };
         }
 
-        private void DrawBarcode(RenderContext context)
-        {
-            if (string.IsNullOrEmpty(context.FieldData)) return;
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            float scale = context.ScaleFactor;
-            int h = (int)((Height > 0 ? Height : context.BarcodeHeight) * scale);
-
-            try
-            {
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.CODE_39,
-                    Options = new EncodingOptions { Height = h, PureBarcode = !PrintInterpretationLine, Margin = 0 },
-                    Renderer = new SKBitmapRenderer()
-                };
-                writer.Options.Width = (int)((context.FieldData.Length * 16) * context.ModuleWidth * scale);
-
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    DrawRotated(canvas, bitmap, context.ScaledX, context.ScaledY, Orientation);
-                    if (PrintInterpretationLine && writer.Options.PureBarcode)
-                        DrawInterpretation(canvas, context.FieldData, context.ScaledX, context.ScaledY, h, PrintInterpretationAbove, context);
-                }
-            }
-            catch { DrawPlaceholder(canvas, context.ScaledX, context.ScaledY, 100 * scale, h, context); }
-        }
+        // DrawBarcode removed
 
         public override void Parse(string parameters)
         {
@@ -234,51 +118,20 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "EAN13", 
+                 Height = Height > 0 ? Height : context.BarcodeHeight,
+                 Orientation = Orientation,
+                 ModuleWidth = context.ModuleWidth,
+                 PrintInterpretationLine = PrintInterpretationLine,
+                 PrintInterpretationLineAbove = PrintInterpretationAbove
+             };
         }
 
-        private void DrawBarcode(RenderContext context)
-        {
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-
-            // EAN Validation
-            if (!ValidateData(context.FieldData))
-            {
-                 DrawFallbackText(canvas, "INVALID EAN", context.ScaledX, context.ScaledY, 100 * context.ScaleFactor, 50 * context.ScaleFactor, context);
-                 return;
-            }
-
-            float scale = context.ScaleFactor;
-            int h = (int)((Height > 0 ? Height : context.BarcodeHeight) * scale);
-
-            try
-            {
-                // Support EAN-13, but also generic numeric if needed. 
-                // ZPL ^BE typically implies EAN-13.
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.EAN_13,
-                    Options = new EncodingOptions { Height = h, PureBarcode = !PrintInterpretationLine, Margin = 0 },
-                    Renderer = new SKBitmapRenderer()
-                };
-                writer.Options.Width = (int)(96 * context.ModuleWidth * scale);
-
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    DrawRotated(canvas, bitmap, context.ScaledX, context.ScaledY, Orientation);
-                    
-                    // Manual Interpretation Line if requested and PureBarcode used
-                    if (PrintInterpretationLine && writer.Options.PureBarcode)
-                    {
-                        DrawInterpretation(canvas, context.FieldData, context.ScaledX, context.ScaledY, h, PrintInterpretationAbove, context);
-                    }
-                }
-            }
-            catch 
-            { 
-                DrawFallbackText(canvas, context.FieldData, context.ScaledX, context.ScaledY, 100 * scale, h, context); 
-            }
-        }
+        // DrawBarcode removed
 
         protected override bool ValidateData(string data)
         {
@@ -311,34 +164,17 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
-        }
-
-        private void DrawBarcode(RenderContext context)
-        {
-            if (string.IsNullOrEmpty(context.FieldData)) return;
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            float scale = context.ScaleFactor;
-            int h = (int)((Height > 0 ? Height : context.BarcodeHeight) * scale);
-
-            try
-            {
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.CODE_93,
-                    Options = new EncodingOptions { Height = h, PureBarcode = !PrintInterpretationLine, Margin = 0 },
-                    Renderer = new SKBitmapRenderer()
-                };
-                writer.Options.Width = (int)((context.FieldData.Length * 9) * context.ModuleWidth * scale);
-
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    DrawRotated(canvas, bitmap, context.ScaledX, context.ScaledY, Orientation);
-                    if (PrintInterpretationLine && writer.Options.PureBarcode)
-                        DrawInterpretation(canvas, context.FieldData, context.ScaledX, context.ScaledY, h, PrintInterpretationAbove, context);
-                }
-            }
-            catch { DrawPlaceholder(canvas, context.ScaledX, context.ScaledY, 100 * scale, h, context); }
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "BA", // Code 93
+                 Height = Height > 0 ? Height : context.BarcodeHeight,
+                 Orientation = Orientation,
+                 ModuleWidth = context.ModuleWidth,
+                 PrintInterpretationLine = PrintInterpretationLine,
+                 PrintInterpretationLineAbove = PrintInterpretationAbove
+             };
         }
 
         public override void Parse(string parameters)
@@ -364,32 +200,17 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
-        }
-
-        private void DrawBarcode(RenderContext context)
-        {
-            if (string.IsNullOrEmpty(context.FieldData)) return;
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            float scale = context.ScaleFactor;
-            int h = (int)((Height > 0 ? Height : context.BarcodeHeight) * scale);
-
-            try
-            {
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.UPC_A,
-                    Options = new EncodingOptions { Height = h, PureBarcode = !PrintInterpretationLine, Margin = 0 },
-                    Renderer = new SKBitmapRenderer()
-                };
-                writer.Options.Width = (int)(96 * context.ModuleWidth * scale);
-
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    DrawRotated(canvas, bitmap, context.ScaledX, context.ScaledY, Orientation);
-                }
-            }
-            catch { DrawPlaceholder(canvas, context.ScaledX, context.ScaledY, 100 * scale, h, context); }
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "BU", // UPC-A
+                 Height = Height > 0 ? Height : context.BarcodeHeight,
+                 Orientation = Orientation,
+                 ModuleWidth = context.ModuleWidth,
+                 PrintInterpretationLine = PrintInterpretationLine,
+                 PrintInterpretationLineAbove = PrintInterpretationAbove
+             };
         }
 
         public override void Parse(string parameters)
@@ -415,36 +236,19 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
-        }
-
-        private void DrawBarcode(RenderContext context)
-        {
-            if (string.IsNullOrEmpty(context.FieldData)) return;
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            float scale = context.ScaleFactor;
-            float x = context.ScaledX;
-            float y = context.ScaledY;
-
-            try
-            {
-                string qrData = ParseQRData(context.FieldData);
-                int size = (int)(10 * Magnification * scale);
-                // Ensure minimum size
-                if (size < 1) size = 1;
-
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.QR_CODE,
-                    Options = new ZXing.QrCode.QrCodeEncodingOptions { ErrorCorrection = GetErrorCorrectionLevel(), Margin = 0, Width = size, Height = size },
-                    Renderer = new SKBitmapRenderer()
-                };
-                using (var qrBitmap = writer.Write(qrData))
-                {
-                    DrawRotated(canvas, qrBitmap, x, y, Orientation);
-                }
-            }
-            catch { DrawPlaceholder(canvas, x, y, 50 * Magnification * scale, 50 * Magnification * scale, context); }
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "BQ", // QR
+                 Orientation = Orientation,
+                 ModuleWidth = Magnification, // Mapping Magnification to ModuleWidth contextually for QR
+                 // QR specific params? We might need a ZplBarcodeQR subclass or extended dictionary
+                 // For now, storing basics. The Drawer will need to know Model/ErrorCorrection.
+                 // Let's assume ZplBarcode can hold extra data or we cheat with BarcodeType
+             };
+             // Ideally we should have a ZplBarcodeQR : ZplBarcode. But for simplicity let's stick to base if possible
+             // or add dictionary to ZplElement.
         }
 
         private string ParseQRData(string fieldData)
@@ -487,29 +291,14 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
-        }
-
-        private void DrawBarcode(RenderContext context)
-        {
-            if (string.IsNullOrEmpty(context.FieldData)) return;
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            float scale = context.ScaleFactor;
-            try
-            {
-                int dim = (int)(Height * 10 * scale);
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.DATA_MATRIX,
-                    Options = new EncodingOptions { Margin = 0, Width = dim, Height = dim },
-                    Renderer = new SKBitmapRenderer()
-                };
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    DrawRotated(canvas, bitmap, context.ScaledX, context.ScaledY, Orientation);
-                }
-            }
-            catch { DrawPlaceholder(canvas, context.ScaledX, context.ScaledY, 50 * scale, 50 * scale, context); }
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "BX", // DataMatrix
+                 Height = Height,
+                 Orientation = Orientation
+             };
         }
 
         public override void Parse(string parameters)
@@ -531,29 +320,14 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
-        }
-
-        private void DrawBarcode(RenderContext context)
-        {
-            if (string.IsNullOrEmpty(context.FieldData)) return;
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            float scale = context.ScaleFactor;
-            int h = (int)(Height * scale);
-            try
-            {
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.PDF_417,
-                    Options = new EncodingOptions { Margin = 0, Height = h },
-                    Renderer = new SKBitmapRenderer()
-                };
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    DrawRotated(canvas, bitmap, context.ScaledX, context.ScaledY, Orientation);
-                }
-            }
-            catch { DrawPlaceholder(canvas, context.ScaledX, context.ScaledY, 100 * scale, h, context); }
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "B7", // PDF417
+                 Height = Height,
+                 Orientation = Orientation
+             };
         }
 
         public override void Parse(string parameters)
@@ -575,29 +349,14 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
-        }
-
-        private void DrawBarcode(RenderContext context)
-        {
-            if (string.IsNullOrEmpty(context.FieldData)) return;
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            float scale = context.ScaleFactor;
-            try
-            {
-                int dim = (int)(50 * Magnification * scale);
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.AZTEC,
-                    Options = new EncodingOptions { Margin = 0, Width = dim, Height = dim },
-                    Renderer = new SKBitmapRenderer()
-                };
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    DrawRotated(canvas, bitmap, context.ScaledX, context.ScaledY, Orientation);
-                }
-            }
-            catch { DrawPlaceholder(canvas, context.ScaledX, context.ScaledY, 50 * scale, 50 * scale, context); }
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "B0", // Aztec
+                 ModuleWidth = Magnification,
+                 Orientation = Orientation
+             };
         }
 
         public override void Parse(string parameters)
@@ -618,31 +377,13 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            context.NextFieldRenderAction = DrawBarcode;
-        }
-
-        private void DrawBarcode(RenderContext context)
-        {
-            if (string.IsNullOrEmpty(context.FieldData)) return;
-            var canvas = context.Canvas;
-            if (canvas == null) return;
-            float scale = context.ScaleFactor;
-            try
-            {
-                var writer = new BarcodeWriter<SKBitmap> {
-                    Format = BarcodeFormat.MAXICODE,
-                    Options = new EncodingOptions { Margin = 0 },
-                    Renderer = new SKBitmapRenderer()
-                };
-                using (var bitmap = writer.Write(context.FieldData))
-                {
-                    float x = context.ScaledX;
-                    float y = context.ScaledY;
-                    var destRect = SKRect.Create(x, y, bitmap.Width * scale, bitmap.Height * scale);
-                    canvas.DrawBitmap(bitmap, destRect);
-                }
-            }
-            catch { DrawPlaceholder(canvas, context.ScaledX, context.ScaledY, 100 * scale, 100 * scale, context); }
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "BD", // MaxiCode
+                 Orientation = FieldOrientation.Normal// MaxiCode is fixed orientation usually
+             };
         }
 
         public override void Parse(string parameters)

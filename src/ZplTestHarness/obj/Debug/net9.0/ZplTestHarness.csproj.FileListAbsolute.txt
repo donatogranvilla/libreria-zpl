@@ -28,3 +28,34 @@ c:\Dev\libreria zpl\src\ZplTestHarness\obj\Debug\net9.0\refint\ZplTestHarness.dl
 c:\Dev\libreria zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.pdb
 c:\Dev\libreria zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.genruntimeconfig.cache
 c:\Dev\libreria zpl\src\ZplTestHarness\obj\Debug\net9.0\ref\ZplTestHarness.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.csproj.AssemblyReference.cache
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.GeneratedMSBuildEditorConfig.editorconfig
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.AssemblyInfoInputs.cache
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.AssemblyInfo.cs
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.csproj.CoreCompileInputs.cache
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.sourcelink.json
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\refint\ZplTestHarness.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.pdb
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZplTestHarness.exe
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZplTestHarness.deps.json
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZplTestHarness.runtimeconfig.json
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZplTestHarness.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZplTestHarness.pdb
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\SkiaSharp.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\zxing.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZXing.SkiaSharp.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\runtimes\linux-arm\native\libSkiaSharp.so
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\runtimes\linux-arm64\native\libSkiaSharp.so
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\runtimes\linux-musl-x64\native\libSkiaSharp.so
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\runtimes\linux-x64\native\libSkiaSharp.so
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\runtimes\osx\native\libSkiaSharp.dylib
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\runtimes\win-arm64\native\libSkiaSharp.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\runtimes\win-x64\native\libSkiaSharp.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\runtimes\win-x86\native\libSkiaSharp.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZplRenderer.dll
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZplRenderer.pdb
+C:\Dev\libreria-zpl\src\ZplTestHarness\bin\Debug\net9.0\ZplRenderer.xml
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestH.3D2C5AAD.Up2Date
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ZplTestHarness.genruntimeconfig.cache
+C:\Dev\libreria-zpl\src\ZplTestHarness\obj\Debug\net9.0\ref\ZplTestHarness.dll

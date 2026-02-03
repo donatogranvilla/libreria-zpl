@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Dev\\libreria zpl\\src\\ZplRenderer\\ZplRenderer.csproj": {}
+    "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj": {}
   },
   "projects": {
-    "C:\\Dev\\libreria zpl\\src\\ZplRenderer\\ZplRenderer.csproj": {
+    "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Dev\\libreria zpl\\src\\ZplRenderer\\ZplRenderer.csproj",
+        "projectUniqueName": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj",
         "projectName": "ZplRenderer",
-        "projectPath": "C:\\Dev\\libreria zpl\\src\\ZplRenderer\\ZplRenderer.csproj",
+        "projectPath": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj",
         "packagesPath": "C:\\Users\\d.granvillano\\.nuget\\packages\\",
-        "outputPath": "C:\\Dev\\libreria zpl\\src\\ZplRenderer\\obj\\",
+        "outputPath": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

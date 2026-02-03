@@ -41,7 +41,7 @@ namespace ZplRenderer.Commands
             { "CF", () => new ChangeDefaultFontCommand() },
             { "A@", () => new ScalableFontCommand() },
             { "CI", () => new ChangeInternationalFontCommand() },
-            { "TEXT_RENDER", () => new TextRenderCommand() },
+
             
             // Graphic commands
             { "GB", () => new GraphicBoxCommand() },

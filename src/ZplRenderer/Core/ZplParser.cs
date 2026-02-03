@@ -34,9 +34,6 @@ namespace ZplRenderer.Core
                 return label;
 
             var tokens = _tokenizer.Tokenize(zplCode);
-            ZplCommand pendingFontCommand = null;
-            ZplCommand pendingBarcodeCommand = null;
-
             foreach (var token in tokens)
             {
                 var command = _commandFactory.CreateCommand(token.CommandCode);
@@ -61,35 +58,6 @@ namespace ZplRenderer.Core
 
                 command.Parse(parameters);
                 label.Commands.Add(command);
-
-                // Track font and barcode commands for text rendering
-                if (command is FontCommand)
-                {
-                    pendingFontCommand = command;
-                    pendingBarcodeCommand = null;
-                }
-                else if (command is BarcodeCode128Command || command is BarcodeQRCommand)
-                {
-                    pendingBarcodeCommand = command;
-                    pendingFontCommand = null;
-                }
-                else if (command is FieldDataCommand)
-                {
-                    // After field data, if there's a pending font command (not barcode),
-                    // we need to render text
-                    if (pendingFontCommand != null && pendingBarcodeCommand == null)
-                    {
-                        var textRender = new TextRenderCommand();
-                        textRender.Parse("");
-                        label.Commands.Add(textRender);
-                    }
-                }
-                else if (command is FieldSeparatorCommand)
-                {
-                    // Reset pending commands after field separator
-                    pendingFontCommand = null;
-                    pendingBarcodeCommand = null;
-                }
             }
 
             return label;

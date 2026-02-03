@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SkiaSharp;
+using ZplRenderer.Elements;
 
 namespace ZplRenderer.Rendering
 {
@@ -9,18 +10,15 @@ namespace ZplRenderer.Rendering
     /// </summary>
     public enum FieldOrientation
     {
-        /// <summary>Normal orientation (0 degrees).</summary>
         Normal = 0,
-        /// <summary>Rotated 90 degrees clockwise.</summary>
         Rotated90 = 90,
-        /// <summary>Inverted (180 degrees).</summary>
         Inverted = 180,
-        /// <summary>Rotated 270 degrees (or 90 counter-clockwise).</summary>
         Rotated270 = 270
     }
 
     /// <summary>
-    /// Maintains rendering state during ZPL label processing.
+    /// Maintains parsing state and accumulates elements during ZPL processing.
+    /// This context is used during the Command Execution phase to build the ZplElement model.
     /// </summary>
     public class RenderContext : IDisposable
     {
@@ -28,9 +26,14 @@ namespace ZplRenderer.Rendering
         private SKFont _currentFont;
 
         /// <summary>
-        /// The SKCanvas object used for drawing.
+        /// The list of elements parsed so far.
         /// </summary>
-        public SKCanvas Canvas { get; set; }
+        public List<ZplElement> Elements { get; } = new List<ZplElement>();
+
+        /// <summary>
+        /// Pending barcode configuration. If set, the next ^FD will generate a barcode element using this config.
+        /// </summary>
+        public ZplElement PendingBarcode { get; set; }
 
         /// <summary>
         /// Current field origin X position in dots.
@@ -54,159 +57,59 @@ namespace ZplRenderer.Rendering
 
         /// <summary>
         /// Cache for downloaded graphics (~DG).
-        /// Key: Image name (e.g. "LOGO.GRF"), Value: SkiaSharp Bitmap.
+        /// Key: Image name, Value: SkiaSharp Bitmap.
         /// </summary>
         public Dictionary<string, SKBitmap> GraphicsCache { get; } = new Dictionary<string, SKBitmap>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
-        /// Horizontal DPI of the target printer.
+        /// Horizontal DPI (state only, used for sizing/scaling logic if needed).
         /// </summary>
         public int DpiX { get; set; } = 203;
-
-        /// <summary>
-        /// Vertical DPI of the target printer.
-        /// </summary>
         public int DpiY { get; set; } = 203;
 
-        /// <summary>
-        /// Custom DPI override (null = use DpiX/DpiY).
-        /// </summary>
-        public int? CustomDpi { get; set; } = null;
+        // Scaling factors (keeping 1:1 for ZPL dots to pixels)
+        public float ScaleFactor => 1.0f; 
 
-        /// <summary>
-        /// Effective DPI for rendering.
-        /// </summary>
-        public int EffectiveDpi => CustomDpi ?? DpiX;
-
-        /// <summary>
-        /// Scale factor based on 203 DPI baseline.
-        /// </summary>
-        public float ScaleFactor => EffectiveDpi / 203.0f;
-
-        /// <summary>
-        /// Scaled Absolute X position.
-        /// </summary>
-        public float ScaledX => (LabelHomeX + CurrentX) * ScaleFactor;
-
-        /// <summary>
-        /// Scaled Absolute Y position.
-        /// </summary>
-        public float ScaledY => (LabelHomeY + CurrentY) * ScaleFactor;
-
-        /// <summary>
-        /// Label print width in dots (set by ^PW).
-        /// </summary>
         public int? PrintWidth { get; set; }
-
-        /// <summary>
-        /// Label length in dots (set by ^LL).
-        /// </summary>
         public int? LabelLength { get; set; }
-
-        /// <summary>
-        /// Media darkness level (-30 to 30) (set by ^MD).
-        /// </summary>
         public int MediaDarkness { get; set; } = 0;
-
-        /// <summary>
-        /// Print speed (set by ^PR).
-        /// </summary>
         public string PrintSpeed { get; set; } = "A";
 
-        /// <summary>
-        /// Current font height in dots.
-        /// </summary>
         public int FontHeight { get; set; } = 30;
-
-        /// <summary>
-        /// Scaled font height.
-        /// </summary>
-        public float ScaledFontHeight => FontHeight * ScaleFactor;
-
-        /// <summary>
-        /// Current font width in dots (0 = auto).
-        /// </summary>
         public int FontWidth { get; set; } = 0;
-
-        /// <summary>
-        /// Current field orientation.
-        /// </summary>
         public FieldOrientation FieldOrientation { get; set; } = FieldOrientation.Normal;
 
-        /// <summary>
-        /// Default barcode module width in dots.
-        /// </summary>
+        // Barcode Defaults
         public int ModuleWidth { get; set; } = 2;
-
-        /// <summary>
-        /// Default barcode module ratio (wide to narrow).
-        /// </summary>
         public float ModuleRatio { get; set; } = 3.0f;
-
-        /// <summary>
-        /// Default barcode height in dots.
-        /// </summary>
         public int BarcodeHeight { get; set; } = 100;
 
-        /// <summary>
-        /// Pending field data (set by ^FD, used by next printable element).
-        /// </summary>
+        // Field Data State
         public string FieldData { get; set; }
-
-        /// <summary>
-        /// Hexadecimal indicator char set by ^FH. Null if disabled for current field.
-        /// </summary>
         public char? HexReferenceIndicator { get; set; } = null;
 
-        /// <summary>
-        /// Current ZPL font name (0-9, A-Z).
-        /// </summary>
+        // Font State
         public string ZplFontName { get; set; } = "0";
 
-        /// <summary>
-        /// Field Block width in dots (0 = disabled). Set by ^FB.
-        /// </summary>
+        // Field Block State (^FB)
         public int FieldBlockWidth { get; set; } = 0;
-
-        /// <summary>
-        /// Field Block max lines.
-        /// </summary>
         public int FieldBlockMaxLines { get; set; } = 1;
-
-        /// <summary>
-        /// Field Block text alignment (L, C, R, J).
-        /// </summary>
         public char FieldBlockAlignment { get; set; } = 'L';
 
-        /// <summary>
-        /// Field Typeset (baseline) positioning mode. Set by ^FT.
-        /// </summary>
-        public bool IsBaselinePosition { get; set; } = false;
-
-        /// <summary>
-        /// Field Reverse Print (white on black). Set by ^FR.
-        /// </summary>
+        // Positioning State
+        public bool IsBaselinePosition { get; set; } = false; // True for ^FT, False for ^FO
         public bool IsReversePrint { get; set; } = false;
 
-        /// <summary>
-        /// Action to render the next field (e.g. Barcode).
-        /// If null, default Text rendering is used.
-        /// </summary>
-        public Action<RenderContext> NextFieldRenderAction { get; set; }
-
-        /// <summary>
-        /// Gets the absolute X position including label home offset.
-        /// </summary>
         public int AbsoluteX => LabelHomeX + CurrentX;
-
-        /// <summary>
-        /// Gets the absolute Y position including label home offset.
-        /// </summary>
         public int AbsoluteY => LabelHomeY + CurrentY;
 
         /// <summary>
-        /// Current SKFont for text rendering.
+        /// Action to render the next field (e.g. Barcode). - OBSOLETE but kept if referenced by legacy, 
+        /// though we refactored commands to use PendingBarcode. Remove if safe.
         /// </summary>
+        // public Action<RenderContext> NextFieldRenderAction { get; set; } 
+        // Logic removed.
+
         public SKFont CurrentFont
         {
             get
@@ -217,96 +120,44 @@ namespace ZplRenderer.Rendering
                      if (_currentTypeface == null) _currentTypeface = SKTypeface.FromFamilyName("Segoe UI");
                      if (_currentTypeface == null) _currentTypeface = SKTypeface.Default;
 
-                    _currentFont = new SKFont(_currentTypeface, ScaledFontHeight); // 1:1 mapping for ZPL dots
+                    _currentFont = new SKFont(_currentTypeface, FontHeight);
                 }
                 return _currentFont;
             }
         }
 
-        /// <summary>
-        /// Updates the current font based on ZPL font settings.
-        /// </summary>
         public void UpdateFont(string fontName, int height, int width, FieldOrientation orientation)
         {
             ZplFontName = fontName;
             FontHeight = height > 0 ? height : FontHeight;
             FieldOrientation = orientation;
 
-            // Get font info for aspect ratio calculation
-            var fontInfo = Utils.FontMappings.GetFontInfo(fontName);
+            // Simplified Font creation logic
+             var fontInfo = Utils.FontMappings.GetFontInfo(fontName);
             
-            // If width not specified, calculate from aspect ratio
-            if (width > 0)
-            {
-                FontWidth = width;
-            }
-            else if (height > 0)
-            {
-                FontWidth = (int)(height * fontInfo.AspectRatio);
-            }
+            if (width > 0) FontWidth = width;
 
-            _currentTypeface?.Dispose();
-            _currentFont?.Dispose();
+            // Do NOT dispose current typeface/font here as they are referenced by created Elements!
+            // _currentTypeface?.Dispose();
+            // _currentFont?.Dispose();
             _currentTypeface = null;
             _currentFont = null;
             
-            // Create typeface with appropriate style
             var style = fontInfo.IsBold ? SKFontStyle.Bold : SKFontStyle.Normal;
             _currentTypeface = SKTypeface.FromFamilyName(fontInfo.FontFamily, style);
-            if (_currentTypeface == null) _currentTypeface = SKTypeface.FromFamilyName("Arial");
-            if (_currentTypeface == null) _currentTypeface = SKTypeface.Default;
+            if (_currentTypeface == null) _currentTypeface = SKTypeface.FromFamilyName("Arial"); // Fallback
         }
 
-        /// <summary>
-        /// Parses orientation character to FieldOrientation enum.
-        /// </summary>
         public static FieldOrientation ParseOrientation(char orientationChar)
         {
             switch (char.ToUpperInvariant(orientationChar))
             {
-                case 'R': return FieldOrientation.Rotated90;
-                case 'I': return FieldOrientation.Inverted;
-                case 'B': return FieldOrientation.Rotated270;
+                case 'R': return FieldOrientation.Rotated90;  // Rotate 90° clockwise
+                case 'I': return FieldOrientation.Inverted;   // Rotate 180°
+                case 'B': return FieldOrientation.Rotated90;  // Bottom-to-top (same visual as R for barcodes)
                 case 'N':
                 default: return FieldOrientation.Normal;
             }
-        }
-
-        /// <summary>
-        /// Creates a paint for drawing with the specified color.
-        /// </summary>
-        public SKPaint CreatePaint(SKColor color, bool isStroke = false, float strokeWidth = 1)
-        {
-            return new SKPaint
-            {
-                Color = color,
-                IsAntialias = true,
-                Style = isStroke ? SKPaintStyle.Stroke : SKPaintStyle.Fill,
-                StrokeWidth = strokeWidth
-            };
-        }
-
-        /// <summary>
-        /// Creates a text paint for drawing text.
-        /// </summary>
-        public SKPaint CreateTextPaint(SKColor color)
-        {
-            var paint = new SKPaint
-            {
-                Color = color,
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-                Typeface = CurrentFont.Typeface,
-                TextSize = ScaledFontHeight // Use scaled height directly
-            };
-
-            // Ensure visible color if not reverse print
-            if (!IsReversePrint && (color == SKColors.Transparent || color.Alpha == 0))
-            {
-                paint.Color = SKColors.Black;
-            }
-
-            return paint;
         }
 
         public void Dispose()

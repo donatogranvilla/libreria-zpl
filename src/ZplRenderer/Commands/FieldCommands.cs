@@ -145,14 +145,50 @@ namespace ZplRenderer.Commands
         public override void Execute(RenderContext context)
         {
             // Apply Hex Decoding if Indicator is set
+            string finalData = Data;
             if (context.HexReferenceIndicator.HasValue)
             {
-                context.FieldData = DecodeHex(Data, context.HexReferenceIndicator.Value);
+                finalData = DecodeHex(Data, context.HexReferenceIndicator.Value);
+            }
+            
+            // Check if we have a Pending Barcode element waiting for data
+            if (context.PendingBarcode is ZplRenderer.Elements.ZplBarcode barcode)
+            {
+                barcode.Content = finalData;
+                context.Elements.Add(barcode);
+                context.PendingBarcode = null;
             }
             else
             {
-                context.FieldData = Data;
+                // Create Text Element
+                var textField = new ZplRenderer.Elements.ZplTextField
+                {
+                    X = context.AbsoluteX,
+                    Y = context.AbsoluteY,
+                    Text = finalData,
+                    Font = new SkiaSharp.SKFont(context.CurrentFont.Typeface, context.CurrentFont.Size), 
+                    Orientation = context.FieldOrientation,
+                    IsReversePrint = context.IsReversePrint,
+                    OriginType = context.IsBaselinePosition ? ZplRenderer.Elements.ElementOriginType.Baseline : ZplRenderer.Elements.ElementOriginType.TopLeft,
+                    ScaleX = (context.FontWidth > 0 && context.FontHeight > 0) ? (float)context.FontWidth / context.FontHeight : 1.0f
+                };
+
+                // Apply Field Block if active
+                if (context.FieldBlockWidth > 0)
+                {
+                    textField.FieldBlock = new ZplRenderer.Elements.ZplFieldBlock
+                    {
+                         Width = context.FieldBlockWidth,
+                         MaxLines = context.FieldBlockMaxLines,
+                         Alignment = context.FieldBlockAlignment
+                    };
+                }
+
+                context.Elements.Add(textField);
             }
+
+            // Important: After printing a field, some ZPL state might reset, 
+            // but usually ^FS resets it. ^FD itself just adds data.
         }
 
         private string DecodeHex(string input, char indicator)

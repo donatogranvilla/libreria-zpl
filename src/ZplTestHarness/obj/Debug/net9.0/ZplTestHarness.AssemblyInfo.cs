@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZplTestHarness")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2668cd6361a8df2fce31860a32165154d730fa8a")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZplTestHarness")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZplTestHarness")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
