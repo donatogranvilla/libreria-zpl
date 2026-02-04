@@ -28,6 +28,10 @@ namespace ZplRenderer.Drawers
                 case "B7": format = BarcodeFormat.PDF_417; break;
                 case "B0": format = BarcodeFormat.AZTEC; break;
                 case "BD": format = BarcodeFormat.MAXICODE; break;
+                case "B2": format = BarcodeFormat.ITF; break;
+                case "BK": format = BarcodeFormat.CODABAR; break;
+                case "BM": format = BarcodeFormat.MSI; break;
+                case "BP": format = BarcodeFormat.PLESSEY; break;
                 default: format = BarcodeFormat.CODE_128; break;
             }
 

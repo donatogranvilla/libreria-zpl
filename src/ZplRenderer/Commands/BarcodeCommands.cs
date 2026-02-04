@@ -392,4 +392,62 @@ namespace ZplRenderer.Commands
             Mode = parts.Length > 0 ? ParseInt(parts[0], 2) : 2;
         }
     }
+    /// <summary>
+    /// ^B2 - Interleaved 2 of 5 Barcode.
+    /// </summary>
+    public class Interleaved2of5Command : BarcodeBaseCommand
+    {
+        public override string CommandCode => "B2";
+        public FieldOrientation Orientation { get; private set; }
+        public int Height { get; private set; } = 0;
+
+        public override void Execute(RenderContext context)
+        {
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "B2",
+                 Height = Height > 0 ? Height : context.BarcodeHeight,
+                 Orientation = Orientation,
+                 ModuleWidth = context.ModuleWidth
+             };
+        }
+
+        public override void Parse(string parameters)
+        {
+            var parts = SplitParameters(parameters);
+            if (parts.Length > 0 && parts[0].Length > 0) Orientation = RenderContext.ParseOrientation(parts[0][0]);
+            Height = parts.Length > 1 ? ParseInt(parts[1], 0) : 0;
+        }
+    }
+
+    /// <summary>
+    /// ^BK - ANSI Codabar Barcode.
+    /// </summary>
+    public class CodabarCommand : BarcodeBaseCommand
+    {
+        public override string CommandCode => "BK";
+        public FieldOrientation Orientation { get; private set; }
+        public int Height { get; private set; } = 0;
+
+        public override void Execute(RenderContext context)
+        {
+             context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
+             {
+                 X = context.AbsoluteX,
+                 Y = context.AbsoluteY,
+                 BarcodeType = "BK",
+                 Height = Height > 0 ? Height : context.BarcodeHeight,
+                 Orientation = Orientation
+             };
+        }
+
+        public override void Parse(string parameters)
+        {
+            var parts = SplitParameters(parameters);
+             if (parts.Length > 0 && parts[0].Length > 0) Orientation = RenderContext.ParseOrientation(parts[0][0]);
+             Height = parts.Length > 2 ? ParseInt(parts[2], 0) : 0;
+        }
+    }
 }

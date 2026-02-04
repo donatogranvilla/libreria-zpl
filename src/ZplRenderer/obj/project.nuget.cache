@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pJ4g4P4Bl4E=",
+  "dgSpecHash": "hHQpkrh2+UE=",
   "success": true,
-  "projectFilePath": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj",
+  "projectFilePath": "c:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",

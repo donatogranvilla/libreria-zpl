@@ -46,6 +46,8 @@ namespace ZplRenderer.Rendering
 
             // 1. Build Model (Execute Commands)
             var elements = new System.Collections.Generic.List<ZplRenderer.Elements.ZplElement>();
+            PrintOrientation printOrientation = PrintOrientation.Normal;
+
             using (var context = new RenderContext
             {
                 // Canvas is no longer used during command execution
@@ -67,12 +69,18 @@ namespace ZplRenderer.Rendering
                     }
                 }
                 elements.AddRange(context.Elements);
+                printOrientation = context.PrintOrientation;
             }
 
             // 2. Render Model (Draw Elements)
             using (var canvas = new SKCanvas(bitmap))
             {
                 canvas.Clear(BackgroundColor);
+
+                if (printOrientation == PrintOrientation.Inverted)
+                {
+                    canvas.RotateDegrees(180, pixelWidth / 2f, pixelHeight / 2f);
+                }
                 
                 var elementRenderer = new ElementRenderer();
                 elementRenderer.Render(elements, canvas, dpi, dpi);

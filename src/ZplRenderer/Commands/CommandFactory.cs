@@ -22,6 +22,9 @@ namespace ZplRenderer.Commands
             { "PQ", () => new PrintQuantityCommand() },
             { "MD", () => new MediaDarknessCommand() },
             { "PR", () => new PrintRateCommand() },
+            { "PO", () => new PrintOrientationCommand() },
+            { "LT", () => new LabelTopCommand() },
+            { "LS", () => new LabelShiftCommand() },
             
             // Field commands
             { "FO", () => new FieldOriginCommand() },
@@ -65,6 +68,8 @@ namespace ZplRenderer.Commands
             { "B7", () => new PDF417Command() },
             { "B0", () => new AztecCommand() },
             { "BD", () => new MaxiCodeCommand() },
+            { "B2", () => new Interleaved2of5Command() },
+            { "BK", () => new CodabarCommand() },
         };
 
         /// <summary>

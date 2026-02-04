@@ -59,6 +59,16 @@
             ^BD - MaxiCode Barcode command.
             </summary>
         </member>
+        <member name="T:ZplRenderer.Commands.Interleaved2of5Command">
+            <summary>
+            ^B2 - Interleaved 2 of 5 Barcode.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.CodabarCommand">
+            <summary>
+            ^BK - ANSI Codabar Barcode.
+            </summary>
+        </member>
         <member name="T:ZplRenderer.Commands.BarcodeDefaultsCommand">
             <summary>
             ^BY - Barcode Field Default command. Sets default barcode module width and ratio.
@@ -256,6 +266,24 @@
         <member name="T:ZplRenderer.Commands.PrintRateCommand">
             <summary>
             ^PR - Print Rate. Determines the speed of the print.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.PrintOrientationCommand">
+            <summary>
+            ^PO - Print Orientation. Inverts the label output 180 degrees.
+            Format: ^POa (N = Normal, I = Inverted)
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.LabelTopCommand">
+            <summary>
+            ^LT - Label Top. Moves the entire label vertically.
+            Format: ^LTz
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.LabelShiftCommand">
+            <summary>
+            ^LS - Label Shift. Shifts all fields horizontally.
+            Format: ^LSz
             </summary>
         </member>
         <member name="T:ZplRenderer.Commands.GraphicBoxCommand">
@@ -591,6 +619,11 @@
             Orientation/rotation values for ZPL fields.
             </summary>
         </member>
+        <member name="T:ZplRenderer.Rendering.PrintOrientation">
+            <summary>
+            Print orientation for the entire label (^PO).
+            </summary>
+        </member>
         <member name="T:ZplRenderer.Rendering.RenderContext">
             <summary>
             Maintains parsing state and accumulates elements during ZPL processing.
@@ -619,12 +652,24 @@
         </member>
         <member name="P:ZplRenderer.Rendering.RenderContext.LabelHomeX">
             <summary>
-            Label home X offset in dots.
+            Label home X offset in dots (^LH).
             </summary>
         </member>
         <member name="P:ZplRenderer.Rendering.RenderContext.LabelHomeY">
             <summary>
-            Label home Y offset in dots.
+            Label home Y offset in dots (^LH).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.LabelShiftX">
+            <summary>
+            Label shift X offset in dots (^LS).
+            Shifts all field positions.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.LabelTop">
+            <summary>
+            Label top offset in dots (^LT).
+            Moves the entire label content vertically.
             </summary>
         </member>
         <member name="P:ZplRenderer.Rendering.RenderContext.GraphicsCache">
@@ -638,10 +683,20 @@
             Horizontal DPI (state only, used for sizing/scaling logic if needed).
             </summary>
         </member>
-        <member name="P:ZplRenderer.Rendering.RenderContext.CurrentFont">
+        <member name="P:ZplRenderer.Rendering.RenderContext.PrintOrientation">
             <summary>
-            Action to render the next field (e.g. Barcode). - OBSOLETE but kept if referenced by legacy, 
-            though we refactored commands to use PendingBarcode. Remove if safe.
+            Global print orientation (^PO).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Rendering.RenderContext.EncodingId">
+            <summary>
+            Current code page / encoding map ID (^CI).
+            Default 0 (USA 1).
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Rendering.RenderContext.GetEncoding">
+            <summary>
+            Gets the current encoding based on EncodingId (^CI).
             </summary>
         </member>
         <member name="T:ZplRenderer.Utils.ZplFontInfo">

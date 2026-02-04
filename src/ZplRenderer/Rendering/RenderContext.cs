@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using SkiaSharp;
 using ZplRenderer.Elements;
 
@@ -14,6 +15,15 @@ namespace ZplRenderer.Rendering
         Rotated90 = 90,
         Inverted = 180,
         Rotated270 = 270
+    }
+
+    /// <summary>
+    /// Print orientation for the entire label (^PO).
+    /// </summary>
+    public enum PrintOrientation
+    {
+        Normal,
+        Inverted // 180 degrees
     }
 
     /// <summary>
@@ -46,14 +56,26 @@ namespace ZplRenderer.Rendering
         public int CurrentY { get; set; } = 0;
 
         /// <summary>
-        /// Label home X offset in dots.
+        /// Label home X offset in dots (^LH).
         /// </summary>
         public int LabelHomeX { get; set; } = 0;
 
         /// <summary>
-        /// Label home Y offset in dots.
+        /// Label home Y offset in dots (^LH).
         /// </summary>
         public int LabelHomeY { get; set; } = 0;
+
+        /// <summary>
+        /// Label shift X offset in dots (^LS).
+        /// Shifts all field positions.
+        /// </summary>
+        public int LabelShiftX { get; set; } = 0;
+
+        /// <summary>
+        /// Label top offset in dots (^LT).
+        /// Moves the entire label content vertically.
+        /// </summary>
+        public int LabelTop { get; set; } = 0;
 
         /// <summary>
         /// Cache for downloaded graphics (~DG).
@@ -74,6 +96,17 @@ namespace ZplRenderer.Rendering
         public int? LabelLength { get; set; }
         public int MediaDarkness { get; set; } = 0;
         public string PrintSpeed { get; set; } = "A";
+
+        /// <summary>
+        /// Global print orientation (^PO).
+        /// </summary>
+        public PrintOrientation PrintOrientation { get; set; } = PrintOrientation.Normal;
+
+        /// <summary>
+        /// Current code page / encoding map ID (^CI).
+        /// Default 0 (USA 1).
+        /// </summary>
+        public int EncodingId { get; set; } = 0;
 
         public int FontHeight { get; set; } = 30;
         public int FontWidth { get; set; } = 0;
@@ -100,15 +133,34 @@ namespace ZplRenderer.Rendering
         public bool IsBaselinePosition { get; set; } = false; // True for ^FT, False for ^FO
         public bool IsReversePrint { get; set; } = false;
 
-        public int AbsoluteX => LabelHomeX + CurrentX;
-        public int AbsoluteY => LabelHomeY + CurrentY;
+        public int AbsoluteX => LabelHomeX + LabelShiftX + CurrentX;
+        public int AbsoluteY => LabelHomeY + LabelTop + CurrentY;
 
         /// <summary>
-        /// Action to render the next field (e.g. Barcode). - OBSOLETE but kept if referenced by legacy, 
-        /// though we refactored commands to use PendingBarcode. Remove if safe.
+        /// Gets the current encoding based on EncodingId (^CI).
         /// </summary>
-        // public Action<RenderContext> NextFieldRenderAction { get; set; } 
-        // Logic removed.
+        public Encoding GetEncoding()
+        {
+            // Simplified mapping for common ZPL encodings
+            switch (EncodingId)
+            {
+                case 27: // AS/400
+                case 28: // Unicode (UTF-8)
+                case 29: // Unicode (Big Endian)
+                case 30: // Unicode (Little Endian)
+                case 13: // Zebra Code Page 850 (Multilingual)
+                    return Encoding.UTF8; // Approximating to UTF8 for simplicity where compatible
+                case 0: // USA 1 (cp437 typically)
+                case 1: // USA 2
+                case 2: // UK
+                default:
+                    // Fallback to UTF8 as modern ZPL usually handles it, 
+                    // or ASCII. But C# strings are Unicode. 
+                    // When interpreting HEX bytes, we need the right codepage.
+                    // For now, default to UTF8 as it covers most "bring to state of the art" needs.
+                    return Encoding.UTF8;
+            }
+        }
 
         public SKFont CurrentFont
         {
@@ -154,7 +206,7 @@ namespace ZplRenderer.Rendering
             {
                 case 'R': return FieldOrientation.Rotated90;  // Rotate 90° clockwise
                 case 'I': return FieldOrientation.Inverted;   // Rotate 180°
-                case 'B': return FieldOrientation.Rotated90;  // Bottom-to-top (same visual as R for barcodes)
+                case 'B': return FieldOrientation.Rotated270;  // Bottom-to-top (270°)
                 case 'N':
                 default: return FieldOrientation.Normal;
             }

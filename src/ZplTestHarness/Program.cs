@@ -28,7 +28,7 @@ namespace ZplTestHarness
                 // Fallback to sample
                 Console.WriteLine("Usage: ZplTestHarness <file.zpl> [width] [height] [dpi]");
                 Console.WriteLine("Running default sample...");
-                zplInput = GetChiolaSample(); // Run the sample relevant to the task
+                zplInput = GetEnhancedSample(); 
             }
 
             if (args.Length > 1 && int.TryParse(args[1], out int w)) width = w;
@@ -79,29 +79,24 @@ namespace ZplTestHarness
             }
         }
 
-        static string GetChiolaSample()
+        static string GetEnhancedSample()
         {
             return @"^XA
-^MMT
-^PW812
-^LL812
-^LS0
+^PW812^LL1200
 ^CI28
-^FT40,90^A0N,70,70^FH^FDChiola^FS
-^FT220,90^A0N,20,20^FH^FDUNA STORIA DI SAPORI^FS
-^FT40,135^A0N,18,18^FH^FDProduzione:^FS
-^FT40,155^A0N,16,16^FH^FDVia Nazionale 14 - 14011 Baldichieri d'Asti (AT)^FS
-^FO650,40^GE110,70,2,B^FS
-^FT685,60^A0N,14,14^FH^FDITALIA^FS
-^FT682,85^A0N,20,20^FH^FD725M^FS
-^FT698,105^A0N,14,14^FH^FDCE^FS
-^FT420,60^A0N,18,18^FH^FDSoc. Agr. Gruppo Clemme S.S.^FS
-^FT50,200^A0N,35,35^FB710,1,0,C^FH^FD 881852 ^FS
-^FT50,238^A0N,35,35^FB710,1,0,C^FH^FD 60232054 ^FS
-^FO50,245^GB710,3,3^FS
-^FT50,285^A0N,20,20^FH^FDData Produzione/Production date^FS
-^FT340,285^A0N,30,30^FH^FD 20/10/2026 ^FS
-^FO50,480^BY2,2,40^BEB,,Y,N^FD8001234567890^FS
+^FO50,50^A0N,50,50^FDZPL ENHANCED DEMO^FS
+^FO50,120^A0N,30,30^FD1. Codabar Barcode (^BK):^FS
+^FO50,160^BKN,N,50^FDA12345B^FS
+^FO50,250^A0N,30,30^FD2. Interleaved 2of5 (^B2):^FS
+^FO50,290^B2N,50,Y,N,N^FD1234567890^FS
+^FO50,380^A0N,30,30^FD3. International Chars (^CI28):^FS
+^FO50,420^A0N,30,30^FDUTF8: È à ñ ö €^FS
+^FO50,500^A0N,30,30^FDHex: _C3_89_C3_A0_C3_B1_C3_B6_E2_82_AC^FS
+^FO50,550^GB700,0,2^FS
+^FO50,580^A0N,30,30^FD4. Global Orientation (^PO):^FS
+^FO50,620^A0N,25,25^FD(This label is Normal, ^POI would invert it)^FS
+^FO50,660^A0N,30,30^FD5. Label Shift (^LS):^FS
+^FO50,700^A0N,25,25^FD(Currently 0. try changing code to ^LS50)^FS
 ^XZ";
         }
     }

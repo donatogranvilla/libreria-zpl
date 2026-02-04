@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kM2BTWUIC74=",
+  "dgSpecHash": "cBBrRRUZZ4U=",
   "success": true,
-  "projectFilePath": "C:\\Dev\\libreria-zpl\\src\\ZplTestHarness\\ZplTestHarness.csproj",
+  "projectFilePath": "c:\\Dev\\libreria-zpl\\src\\ZplTestHarness\\ZplTestHarness.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp\\2.88.8\\skiasharp.2.88.8.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp.nativeassets.linux.nodependencies\\2.88.8\\skiasharp.nativeassets.linux.nodependencies.2.88.8.nupkg.sha512",

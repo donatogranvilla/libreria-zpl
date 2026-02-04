@@ -148,7 +148,7 @@ namespace ZplRenderer.Commands
             string finalData = Data;
             if (context.HexReferenceIndicator.HasValue)
             {
-                finalData = DecodeHex(Data, context.HexReferenceIndicator.Value);
+                finalData = DecodeHex(Data, context.HexReferenceIndicator.Value, context.GetEncoding());
             }
             
             // Check if we have a Pending Barcode element waiting for data
@@ -191,14 +191,17 @@ namespace ZplRenderer.Commands
             // but usually ^FS resets it. ^FD itself just adds data.
         }
 
-        private string DecodeHex(string input, char indicator)
+        private string DecodeHex(string input, char indicator, System.Text.Encoding encoding)
         {
             if (string.IsNullOrEmpty(input)) return input;
             if (input.IndexOf(indicator) < 0) return input;
 
             var resultBytes = new System.Collections.Generic.List<byte>();
             
-            // Assume UTF-8 handling for ^CI28 compliance
+            // Assume input string is already correct unicode? 
+            // If data came from ZPL file, it was read as string.
+            // ^FH allows inserting bytes via hex.
+            
             for (int i = 0; i < input.Length; i++)
             {
                 char c = input[i];
@@ -213,22 +216,22 @@ namespace ZplRenderer.Commands
                     else if (i + 1 < input.Length && input[i+1] == indicator)
                     {
                         // Escaped indicator?
-                         resultBytes.AddRange(System.Text.Encoding.UTF8.GetBytes(new[] { indicator }));
+                         resultBytes.AddRange(encoding.GetBytes(new[] { indicator }));
                          i++;
                     }
                     else
                     {
                         // Just the indicator char (not a valid escape)
-                        resultBytes.AddRange(System.Text.Encoding.UTF8.GetBytes(new[] { c }));
+                        resultBytes.AddRange(encoding.GetBytes(new[] { c }));
                     }
                 }
                 else
                 {
-                    resultBytes.AddRange(System.Text.Encoding.UTF8.GetBytes(new[] { c }));
+                    resultBytes.AddRange(encoding.GetBytes(new[] { c }));
                 }
             }
             
-            return System.Text.Encoding.UTF8.GetString(resultBytes.ToArray());
+            return encoding.GetString(resultBytes.ToArray());
         }
 
         private bool IsHex(char c)

@@ -169,4 +169,70 @@ namespace ZplRenderer.Commands
             if (parts.Length > 0) Speed = parts[0];
         }
     }
+    /// <summary>
+    /// ^PO - Print Orientation. Inverts the label output 180 degrees.
+    /// Format: ^POa (N = Normal, I = Inverted)
+    /// </summary>
+    public class PrintOrientationCommand : ZplCommand
+    {
+        public override string CommandCode => "PO";
+        public PrintOrientation Orientation { get; private set; } = PrintOrientation.Normal;
+
+        public override void Execute(RenderContext context)
+        {
+            context.PrintOrientation = Orientation;
+        }
+
+        public override void Parse(string parameters)
+        {
+            var parts = SplitParameters(parameters);
+            if (parts.Length > 0 && parts[0].Length > 0)
+            {
+                 char orient = char.ToUpperInvariant(parts[0][0]);
+                 Orientation = (orient == 'I') ? PrintOrientation.Inverted : PrintOrientation.Normal;
+            }
+        }
+    }
+
+    /// <summary>
+    /// ^LT - Label Top. Moves the entire label vertically.
+    /// Format: ^LTz
+    /// </summary>
+    public class LabelTopCommand : ZplCommand
+    {
+        public override string CommandCode => "LT";
+        public int Offset { get; private set; }
+
+        public override void Execute(RenderContext context)
+        {
+            context.LabelTop = Offset;
+        }
+
+        public override void Parse(string parameters)
+        {
+            var parts = SplitParameters(parameters);
+            Offset = parts.Length > 0 ? ParseInt(parts[0], 0) : 0;
+        }
+    }
+
+    /// <summary>
+    /// ^LS - Label Shift. Shifts all fields horizontally.
+    /// Format: ^LSz
+    /// </summary>
+    public class LabelShiftCommand : ZplCommand
+    {
+        public override string CommandCode => "LS";
+        public int Shift { get; private set; }
+
+        public override void Execute(RenderContext context)
+        {
+            context.LabelShiftX = Shift;
+        }
+
+        public override void Parse(string parameters)
+        {
+            var parts = SplitParameters(parameters);
+            Shift = parts.Length > 0 ? ParseInt(parts[0], 0) : 0;
+        }
+    }
 }

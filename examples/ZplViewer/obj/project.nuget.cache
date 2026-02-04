@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dAGtiNKm/28=",
+  "dgSpecHash": "wxkq19mDZCQ=",
   "success": true,
-  "projectFilePath": "C:\\Dev\\libreria zpl\\examples\\ZplViewer\\ZplViewer.csproj",
+  "projectFilePath": "c:\\Dev\\libreria-zpl\\examples\\ZplViewer\\ZplViewer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp\\2.88.7\\skiasharp.2.88.7.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp.nativeassets.macos\\2.88.7\\skiasharp.nativeassets.macos.2.88.7.nupkg.sha512",

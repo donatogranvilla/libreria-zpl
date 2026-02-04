@@ -133,7 +133,7 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            // Just store it for now, implementation relies on .NET string handling
+            context.EncodingId = MapID;
         }
 
         public override void Parse(string parameters)

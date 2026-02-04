@@ -24,3 +24,30 @@ C:\Dev\libreria zpl\examples\ZplViewer\obj\Debug\net8.0-windows\refint\ZplViewer
 C:\Dev\libreria zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.pdb
 C:\Dev\libreria zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.genruntimeconfig.cache
 C:\Dev\libreria zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ref\ZplViewer.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZplViewer.exe
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZplViewer.deps.json
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZplViewer.runtimeconfig.json
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZplViewer.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZplViewer.pdb
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\SkiaSharp.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\zxing.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZXing.SkiaSharp.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\runtimes\osx\native\libSkiaSharp.dylib
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\runtimes\win-arm64\native\libSkiaSharp.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\runtimes\win-x64\native\libSkiaSharp.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\runtimes\win-x86\native\libSkiaSharp.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZplRenderer.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZplRenderer.pdb
+c:\Dev\libreria-zpl\examples\ZplViewer\bin\Debug\net8.0-windows\ZplRenderer.xml
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.csproj.AssemblyReference.cache
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.GeneratedMSBuildEditorConfig.editorconfig
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.AssemblyInfoInputs.cache
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.AssemblyInfo.cs
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.csproj.CoreCompileInputs.cache
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.sourcelink.json
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.csproj.Up2Date
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\refint\ZplViewer.dll
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.pdb
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.genruntimeconfig.cache
+c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ref\ZplViewer.dll
