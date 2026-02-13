@@ -1,4 +1,4 @@
-using SkiaSharp;
+﻿using SkiaSharp;
 using ZplRenderer.Rendering;
 
 namespace ZplRenderer.Commands
@@ -42,7 +42,8 @@ namespace ZplRenderer.Commands
                 BorderThickness = Thickness,
                 LineColor = Color == 'W' ? SKColors.White : SKColors.Black,
                 OriginType = ZplRenderer.Elements.ElementOriginType.TopLeft,
-                 // TODO: Rounding support in ZplGraphicBox? For now ignoring rounding as basic box.
+                // Grado di arrotondamento degli angoli (0-8), dal 5° parametro ^GB
+                CornerRounding = Rounding,
             };
 
             context.Elements.Add(box);

@@ -1,6 +1,6 @@
 is_global = true
 build_property.RootNamespace = ZplRenderer
-build_property.ProjectDir = c:\Dev\libreria-zpl\src\ZplRenderer\
+build_property.ProjectDir = C:\Dev\libreria-zpl\src\ZplRenderer\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.CsWinRTUseWindowsUIXamlProjections = false

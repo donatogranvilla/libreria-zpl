@@ -1,18 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "wxkq19mDZCQ=",
+  "dgSpecHash": "BfF8REBqVrg=",
   "success": true,
-  "projectFilePath": "c:\\Dev\\libreria-zpl\\examples\\ZplViewer\\ZplViewer.csproj",
+  "projectFilePath": "C:\\Dev\\libreria-zpl\\examples\\ZplViewer\\ZplViewer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp\\2.88.7\\skiasharp.2.88.7.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp.nativeassets.macos\\2.88.7\\skiasharp.nativeassets.macos.2.88.7.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\skiasharp.nativeassets.win32\\2.88.7\\skiasharp.nativeassets.win32.2.88.7.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\zxing.net\\0.16.9\\zxing.net.0.16.9.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\zxing.net.bindings.skiasharp\\0.16.14\\zxing.net.bindings.skiasharp.0.16.14.nupkg.sha512",
-    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.23\\microsoft.netcore.app.ref.8.0.23.nupkg.sha512",
-    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.23\\microsoft.windowsdesktop.app.ref.8.0.23.nupkg.sha512",
-    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.23\\microsoft.aspnetcore.app.ref.8.0.23.nupkg.sha512",
-    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.23\\microsoft.netcore.app.host.win-x64.8.0.23.nupkg.sha512"
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.24\\microsoft.netcore.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.24\\microsoft.windowsdesktop.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.24\\microsoft.aspnetcore.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.24\\microsoft.netcore.app.host.win-x64.8.0.24.nupkg.sha512"
   ],
   "logs": []
 }

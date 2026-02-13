@@ -10,6 +10,14 @@ namespace ZplTestHarness
     {
         static void Main(string[] args)
         {
+            // Decode mode: scan barcodes from a rendered image
+            if (args.Length > 0 && args[0] == "--decode")
+            {
+                for (int i = 1; i < args.Length; i++)
+                    DecodeTest.Run(args[i]);
+                return;
+            }
+
             string zplInput = "";
             string outputPath = "output.png";
             int width = 812;

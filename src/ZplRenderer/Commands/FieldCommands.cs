@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using ZplRenderer.Rendering;
 
 namespace ZplRenderer.Commands
@@ -24,12 +24,10 @@ namespace ZplRenderer.Commands
         {
             context.CurrentX = X;
             context.CurrentY = Y;
-            // Reset field specific settings
+            // ^FO imposta solo la posizione e il tipo di origine (TopLeft).
+            // Lo stato del campo (^FB, ^FR, ^FH) è indipendente e persiste
+            // fino a ^FS, come da specifica ZPL II.
             context.IsBaselinePosition = false;
-            context.FieldBlockWidth = 0;
-            context.FieldBlockMaxLines = 1;
-            context.IsReversePrint = false;
-            context.HexReferenceIndicator = null;
         }
 
         public override void Parse(string parameters)
@@ -57,12 +55,10 @@ namespace ZplRenderer.Commands
         {
             context.CurrentX = X;
             context.CurrentY = Y;
+            // ^FT imposta la posizione usando la baseline come riferimento Y.
+            // Lo stato del campo (^FB, ^FR, ^FH) è indipendente e persiste
+            // fino a ^FS, come da specifica ZPL II.
             context.IsBaselinePosition = true;
-            // Reset others
-            context.FieldBlockWidth = 0;
-            context.FieldBlockMaxLines = 1;
-            context.IsReversePrint = false;
-            context.HexReferenceIndicator = null;
         }
 
         public override void Parse(string parameters)
@@ -160,7 +156,7 @@ namespace ZplRenderer.Commands
             }
             else
             {
-                // Create Text Element
+                // Creo l'elemento testo con tutte le informazioni necessarie al drawer
                 var textField = new ZplRenderer.Elements.ZplTextField
                 {
                     X = context.AbsoluteX,
@@ -170,7 +166,9 @@ namespace ZplRenderer.Commands
                     Orientation = context.FieldOrientation,
                     IsReversePrint = context.IsReversePrint,
                     OriginType = context.IsBaselinePosition ? ZplRenderer.Elements.ElementOriginType.Baseline : ZplRenderer.Elements.ElementOriginType.TopLeft,
-                    ScaleX = (context.FontWidth > 0 && context.FontHeight > 0) ? (float)context.FontWidth / context.FontHeight : 1.0f
+                    ScaleX = (context.FontWidth > 0 && context.FontHeight > 0) ? (float)context.FontWidth / context.FontHeight : 1.0f,
+                    // Trasferisco il nome del font ZPL per il calcolo dell'AspectRatio nel drawer
+                    ZplFontName = context.ZplFontName
                 };
 
                 // Apply Field Block if active

@@ -58,7 +58,7 @@ namespace ZplRenderer.Utils
             {
                 // Font 0: Scalable Swiss 721 (similar to Helvetica/Arial)
                 case "0":
-                    return new ZplFontInfo { FontFamily = "Arial", AspectRatio = 0.6f };
+                    return new ZplFontInfo { FontFamily = "Arial", IsBold = true, AspectRatio = 0.6f };
 
                 // Font A: 9x5 matrix, monospaced
                 case "A":

@@ -51,3 +51,5 @@ c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\refint\ZplViewer
 c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.pdb
 c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.genruntimeconfig.cache
 c:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ref\ZplViewer.dll
+C:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.MainForm.resources
+C:\Dev\libreria-zpl\examples\ZplViewer\obj\Debug\net8.0-windows\ZplViewer.csproj.GenerateResource.cache

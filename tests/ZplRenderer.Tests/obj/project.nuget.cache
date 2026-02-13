@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cRK6pOsOWn4=",
+  "dgSpecHash": "GDSgM1jx3fs=",
   "success": true,
-  "projectFilePath": "c:\\Dev\\libreria zpl\\tests\\ZplRenderer.Tests\\ZplRenderer.Tests.csproj",
+  "projectFilePath": "C:\\Dev\\libreria-zpl\\tests\\ZplRenderer.Tests\\ZplRenderer.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\d.granvillano\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.codecoverage\\17.8.0\\microsoft.codecoverage.17.8.0.nupkg.sha512",
@@ -98,9 +98,9 @@
     "C:\\Users\\d.granvillano\\.nuget\\packages\\xunit.runner.visualstudio\\2.5.3\\xunit.runner.visualstudio.2.5.3.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\zxing.net\\0.16.9\\zxing.net.0.16.9.nupkg.sha512",
     "C:\\Users\\d.granvillano\\.nuget\\packages\\zxing.net.bindings.skiasharp\\0.16.14\\zxing.net.bindings.skiasharp.0.16.14.nupkg.sha512",
-    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.23\\microsoft.netcore.app.ref.8.0.23.nupkg.sha512",
-    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.23\\microsoft.windowsdesktop.app.ref.8.0.23.nupkg.sha512",
-    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.23\\microsoft.aspnetcore.app.ref.8.0.23.nupkg.sha512"
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.24\\microsoft.netcore.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.24\\microsoft.windowsdesktop.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\d.granvillano\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.24\\microsoft.aspnetcore.app.ref.8.0.24.nupkg.sha512"
   ],
   "logs": []
 }

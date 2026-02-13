@@ -1,4 +1,4 @@
-using ZplRenderer.Rendering;
+﻿using ZplRenderer.Rendering;
 
 namespace ZplRenderer.Commands
 {
@@ -51,17 +51,26 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
-            // PendingBarcode should have been consumed by ^FD.
-            // If it wasn't, it implies a malformed ZPL sequence (e.g. ^BC without ^FD).
-            // In that case, we should probably discard it or render a placeholder?
-            // ZPL spec says if no ^FD, command is ignored.
+            // ^FS segna la fine di un campo ZPL. Secondo la specifica ZPL II,
+            // TUTTE le impostazioni per-campo devono essere resettate qui,
+            // inclusi Field Block (^FB), Reverse Print (^FR), e Hex Indicator (^FH).
+            
+            // Reset barcode pendente (se ^FD non lo ha consumato, il comando è ignorato)
             context.PendingBarcode = null;
 
-            // Clear pending field data after field is complete
-            // (Wait, ZplCommand logic usually clears it or the Parser handles it? 
-            // In the previous logic, FieldData was assigned in ^FD.
-            // Here we just ensure we reset for the next field.
+            // Reset dati campo
             context.FieldData = null;
+
+            // Reset stato Field Block (^FB) — il blocco è per-campo, non persistente
+            context.FieldBlockWidth = 0;
+            context.FieldBlockMaxLines = 1;
+            context.FieldBlockAlignment = 'L';
+
+            // Reset Reverse Print (^FR) — si applica solo al campo corrente
+            context.IsReversePrint = false;
+
+            // Reset Hex Indicator (^FH) — si applica solo al campo corrente
+            context.HexReferenceIndicator = null;
         }
 
         public override void Parse(string parameters)

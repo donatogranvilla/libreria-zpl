@@ -1,4 +1,4 @@
-using SkiaSharp;
+﻿using SkiaSharp;
 using ZplRenderer.Elements;
 
 namespace ZplRenderer.Drawers

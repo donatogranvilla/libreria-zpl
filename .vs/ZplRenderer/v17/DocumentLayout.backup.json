@@ -1,33 +1,81 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Dev\\libreria zpl\\",
+  "WorkspaceRootPath": "C:\\Dev\\libreria-zpl\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|c:\\dev\\libreria zpl\\src\\zplrenderer\\core\\zpltokenizer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|c:\\dev\\libreria-zpl\\src\\zplrenderer\\core\\zplparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|solutionrelative:src\\zplrenderer\\core\\zplparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|c:\\dev\\libreria-zpl\\src\\zplrenderer\\core\\zpllabel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|solutionrelative:src\\zplrenderer\\core\\zpllabel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|c:\\dev\\libreria-zpl\\src\\zplrenderer\\core\\zpltokenizer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|solutionrelative:src\\zplrenderer\\core\\zpltokenizer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|c:\\dev\\libreria-zpl\\src\\zplrenderer\\zplengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{10F72EB9-46DA-400B-A753-D25142FE5E85}|src\\ZplRenderer\\ZplRenderer.csproj|solutionrelative:src\\zplrenderer\\zplengine.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
-      "VerticalTabListWidth": 256,
+      "VerticalTabListWidth": 100,
       "DocumentGroups": [
         {
           "DockedWidth": 261,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "ZplTokenizer.cs",
-              "DocumentMoniker": "C:\\Dev\\libreria zpl\\src\\ZplRenderer\\Core\\ZplTokenizer.cs",
-              "RelativeDocumentMoniker": "src\\ZplRenderer\\Core\\ZplTokenizer.cs",
-              "ToolTip": "C:\\Dev\\libreria zpl\\src\\ZplRenderer\\Core\\ZplTokenizer.cs",
-              "RelativeToolTip": "src\\ZplRenderer\\Core\\ZplTokenizer.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAWAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "ZplLabel.cs",
+              "DocumentMoniker": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\Core\\ZplLabel.cs",
+              "RelativeDocumentMoniker": "src\\ZplRenderer\\Core\\ZplLabel.cs",
+              "ToolTip": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\Core\\ZplLabel.cs",
+              "RelativeToolTip": "src\\ZplRenderer\\Core\\ZplLabel.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAIA2wEUAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-09T15:58:51.432Z",
+              "WhenOpened": "2026-02-05T10:54:40.644Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ZplParser.cs",
+              "DocumentMoniker": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\Core\\ZplParser.cs",
+              "RelativeDocumentMoniker": "src\\ZplRenderer\\Core\\ZplParser.cs",
+              "ToolTip": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\Core\\ZplParser.cs",
+              "RelativeToolTip": "src\\ZplRenderer\\Core\\ZplParser.cs",
+              "ViewState": "AgIAAJcAAAAAAAAAAAASwKoAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T10:18:47.773Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ZplEngine.cs",
+              "DocumentMoniker": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplEngine.cs",
+              "RelativeDocumentMoniker": "src\\ZplRenderer\\ZplEngine.cs",
+              "ToolTip": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplEngine.cs",
+              "RelativeToolTip": "src\\ZplRenderer\\ZplEngine.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T08:48:29.032Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ZplTokenizer.cs",
+              "DocumentMoniker": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\Core\\ZplTokenizer.cs",
+              "RelativeDocumentMoniker": "src\\ZplRenderer\\Core\\ZplTokenizer.cs",
+              "ToolTip": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\Core\\ZplTokenizer.cs",
+              "RelativeToolTip": "src\\ZplRenderer\\Core\\ZplTokenizer.cs",
+              "ViewState": "AgIAANwBAAAAAAAAAAAgwO8BAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-09T15:58:51.432Z"
             }
           ]
         }

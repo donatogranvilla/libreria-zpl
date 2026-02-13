@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SkiaSharp;
 using ZplRenderer.Rendering;
 using ZXing;
@@ -37,6 +37,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "BC", // Code 128
                  Height = Height > 0 ? Height : context.BarcodeHeight,
                  Orientation = Orientation,
@@ -83,6 +84,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "B3", // Code 39
                  Height = Height > 0 ? Height : context.BarcodeHeight,
                  Orientation = Orientation,
@@ -118,11 +120,14 @@ namespace ZplRenderer.Commands
 
         public override void Execute(RenderContext context)
         {
+             // BarcodeType deve corrispondere alla chiave usata nel BarcodeDrawer switch:
+             // "BE" → BarcodeFormat.EAN_13 (era "EAN13", che cadeva nel default → CODE_128)
              context.PendingBarcode = new ZplRenderer.Elements.ZplBarcode
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
-                 BarcodeType = "EAN13", 
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
+                 BarcodeType = "BE", 
                  Height = Height > 0 ? Height : context.BarcodeHeight,
                  Orientation = Orientation,
                  ModuleWidth = context.ModuleWidth,
@@ -168,6 +173,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "BA", // Code 93
                  Height = Height > 0 ? Height : context.BarcodeHeight,
                  Orientation = Orientation,
@@ -204,6 +210,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "BU", // UPC-A
                  Height = Height > 0 ? Height : context.BarcodeHeight,
                  Orientation = Orientation,
@@ -240,15 +247,12 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "BQ", // QR
                  Orientation = Orientation,
-                 ModuleWidth = Magnification, // Mapping Magnification to ModuleWidth contextually for QR
-                 // QR specific params? We might need a ZplBarcodeQR subclass or extended dictionary
-                 // For now, storing basics. The Drawer will need to know Model/ErrorCorrection.
-                 // Let's assume ZplBarcode can hold extra data or we cheat with BarcodeType
+                 ModuleWidth = Magnification,
+                 ErrorCorrectionLevel = ErrorCorrection,
              };
-             // Ideally we should have a ZplBarcodeQR : ZplBarcode. But for simplicity let's stick to base if possible
-             // or add dictionary to ZplElement.
         }
 
         private string ParseQRData(string fieldData)
@@ -295,6 +299,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "BX", // DataMatrix
                  Height = Height,
                  Orientation = Orientation
@@ -324,6 +329,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "B7", // PDF417
                  Height = Height,
                  Orientation = Orientation
@@ -353,6 +359,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "B0", // Aztec
                  ModuleWidth = Magnification,
                  Orientation = Orientation
@@ -381,6 +388,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "BD", // MaxiCode
                  Orientation = FieldOrientation.Normal// MaxiCode is fixed orientation usually
              };
@@ -407,6 +415,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "B2",
                  Height = Height > 0 ? Height : context.BarcodeHeight,
                  Orientation = Orientation,
@@ -437,6 +446,7 @@ namespace ZplRenderer.Commands
              {
                  X = context.AbsoluteX,
                  Y = context.AbsoluteY,
+                 OriginType = context.IsBaselinePosition ? Elements.ElementOriginType.Baseline : Elements.ElementOriginType.TopLeft,
                  BarcodeType = "BK",
                  Height = Height > 0 ? Height : context.BarcodeHeight,
                  Orientation = Orientation

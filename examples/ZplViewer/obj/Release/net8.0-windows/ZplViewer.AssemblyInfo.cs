@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ZplViewer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a514a4e49eb16ad252e55f146068f9ef9e82aa21")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZplViewer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZplViewer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

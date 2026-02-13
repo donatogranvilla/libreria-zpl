@@ -1,4 +1,4 @@
-using SkiaSharp;
+﻿using SkiaSharp;
 using System.Collections.Generic;
 
 namespace ZplRenderer.Elements
@@ -49,7 +49,13 @@ namespace ZplRenderer.Elements
         public float ScaleX { get; set; } = 1.0f;
         public Rendering.FieldOrientation Orientation { get; set; }
 
-        /// <summary>Field Block settings (if applied).</summary>
+        /// <summary>
+        /// Identificatore del font ZPL originale (0-9, A-Z).
+        /// Necessario per applicare l'AspectRatio corretto durante il rendering.
+        /// </summary>
+        public string ZplFontName { get; set; } = "0";
+
+        /// <summary>Impostazioni Field Block (^FB) se attive.</summary>
         public ZplFieldBlock FieldBlock { get; set; }
     }
 
@@ -74,6 +80,13 @@ namespace ZplRenderer.Elements
         public int Height { get; set; }
         public int BorderThickness { get; set; }
         public SKColor LineColor { get; set; } = SKColors.Black;
+
+        /// <summary>
+        /// Grado di arrotondamento degli angoli (0-8).
+        /// 0 = angoli retti, 8 = massimo arrotondamento (il raggio è proporzionale al lato minore).
+        /// Corrisponde al 5° parametro del comando ^GB.
+        /// </summary>
+        public int CornerRounding { get; set; } = 0;
     }
 
     /// <summary>
@@ -112,5 +125,9 @@ namespace ZplRenderer.Elements
         public Rendering.FieldOrientation Orientation { get; set; }
         public bool PrintInterpretationLine { get; set; }
         public bool PrintInterpretationLineAbove { get; set; }
+        /// <summary>
+        /// QR Code error correction level: 'H', 'Q', 'M', 'L'. Default 'M'.
+        /// </summary>
+        public char ErrorCorrectionLevel { get; set; } = 'M';
     }
 }

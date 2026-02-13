@@ -25,6 +25,8 @@ namespace ZplRenderer.Commands
             { "PO", () => new PrintOrientationCommand() },
             { "LT", () => new LabelTopCommand() },
             { "LS", () => new LabelShiftCommand() },
+            { "MM", () => new MediaModeCommand() },
+            { "FX", () => new CommentCommand() },
             
             // Field commands
             { "FO", () => new FieldOriginCommand() },

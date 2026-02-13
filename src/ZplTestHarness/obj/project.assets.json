@@ -413,11 +413,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Dev\\libreria-zpl\\src\\ZplTestHarness\\ZplTestHarness.csproj",
+      "projectUniqueName": "C:\\Dev\\libreria-zpl\\src\\ZplTestHarness\\ZplTestHarness.csproj",
       "projectName": "ZplTestHarness",
-      "projectPath": "c:\\Dev\\libreria-zpl\\src\\ZplTestHarness\\ZplTestHarness.csproj",
+      "projectPath": "C:\\Dev\\libreria-zpl\\src\\ZplTestHarness\\ZplTestHarness.csproj",
       "packagesPath": "C:\\Users\\d.granvillano\\.nuget\\packages\\",
-      "outputPath": "c:\\Dev\\libreria-zpl\\src\\ZplTestHarness\\obj\\",
+      "outputPath": "C:\\Dev\\libreria-zpl\\src\\ZplTestHarness\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -439,8 +439,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "c:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj": {
-              "projectPath": "c:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj"
+            "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj": {
+              "projectPath": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj"
             }
           }
         }
@@ -486,7 +486,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.309/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.311/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

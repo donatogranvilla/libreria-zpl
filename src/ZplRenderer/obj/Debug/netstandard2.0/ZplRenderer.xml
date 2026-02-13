@@ -358,6 +358,26 @@
             Format: ^IMd:o.x
             </summary>
         </member>
+        <member name="T:ZplRenderer.Commands.MediaModeCommand">
+            <summary>
+            Comandi ZPL che non influenzano il rendering ma devono essere riconosciuti
+            dal parser per evitare warning "comando non supportato".
+            Questi comandi controllano solo il comportamento fisico della stampante.
+            </summary>
+            <summary>
+            ^MM: Media Mode - controlla la modalita' di stampa (tear-off, peel-off, cutter, ecc.).
+            Non ha effetto sul rendering visivo dell'etichetta.
+            Formato: ^MMm,p dove m = modalita' (T/P/R/C/U/K), p = pre-peel (Y/N)
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Commands.CommentCommand">
+            <summary>
+            ^FX: Commento nel codice ZPL.
+            Il tokenizer gestisce il contenuto del commento: tutto fino al prossimo ^
+            viene incluso nei parametri e ignorato.
+            Utile per annotazioni e documentazione inline nel codice ZPL.
+            </summary>
+        </member>
         <member name="T:ZplRenderer.Commands.ZplCommand">
             <summary>
             Abstract base class for all ZPL commands.
@@ -402,95 +422,337 @@
         </member>
         <member name="T:ZplRenderer.Core.ZplLabel">
             <summary>
-            Represents a parsed ZPL label containing all commands to render.
+            Rappresenta un'etichetta ZPL parsata contenente tutti i comandi da renderizzare.
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplLabel.Commands">
             <summary>
-            List of parsed ZPL commands in execution order.
+            Lista di comandi ZPL parsati in ordine di esecuzione.
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplLabel.WidthDots">
             <summary>
-            Label width in dots (set by ^PW command or default).
+            Larghezza dell'etichetta in dots (impostata da ^PW o default).
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplLabel.HeightDots">
             <summary>
-            Label height in dots (set by ^LL command or default).
+            Altezza dell'etichetta in dots (impostata da ^LL o default).
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplLabel.LabelHomeX">
             <summary>
-            Label home X offset (set by ^LH command).
+            Offset X della label home (impostato da ^LH).
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplLabel.LabelHomeY">
             <summary>
-            Label home Y offset (set by ^LH command).
+            Offset Y della label home (impostato da ^LH).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.PrintDensity">
+            <summary>
+            Densità di stampa in DPI (impostata da ^PR o rilevata dalla stampante).
+            Valori comuni: 203, 300, 600 DPI.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.CharacterEncoding">
+            <summary>
+            Encoding internazionale corrente (impostato da ^CI).
+            0 = USA1, 1-15 = vari encoding internazionali.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.PrintOrientation">
+            <summary>
+            Orientamento dell'etichetta (impostato da ^PO).
+            N = Normal, I = Inverted, R = Rotated 90°, B = Bottom/Rotated 270°
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.MediaType">
+            <summary>
+            Modalità di stampa (impostata da ^MM).
+            T = Tear-off, P = Peel-off, R = Rewind, C = Cutter, D = Delayed cut, K = Kiosk
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.IsValid">
+            <summary>
+            Indica se il formato è valido (ha ^XA e ^XZ).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.ValidationMessages">
+            <summary>
+            Messaggi di validazione o warning raccolti durante il parsing.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.Metadata">
+            <summary>
+            Metadata aggiuntivi dell'etichetta (nome formato, versione, ecc.).
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplLabel.ApplyContext(ZplRenderer.Core.ZplParserContext)">
+            <summary>
+            Applico le impostazioni dal contesto di parsing alla label.
+            Questo metodo viene chiamato dal parser dopo aver processato tutti i comandi.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.WidthInches">
+            <summary>
+            Calcolo la larghezza in pollici basandomi sulla densità.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.HeightInches">
+            <summary>
+            Calcolo l'altezza in pollici basandomi sulla densità.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.WidthMillimeters">
+            <summary>
+            Calcolo la larghezza in millimetri.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplLabel.HeightMillimeters">
+            <summary>
+            Calcolo l'altezza in millimetri.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Core.ZplParseException">
+            <summary>
+            Eccezione lanciata durante il parsing di codice ZPL.
+            </summary>
+        </member>
+        <member name="T:ZplRenderer.Core.ZplParserContext">
+            <summary>
+            Contesto di parsing che mantiene lo stato durante l'interpretazione del codice ZPL.
+            I comandi modal (^FH, ^CI, ^FO, ^A, ecc.) influenzano i comandi successivi.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParserContext.ResetLabelState">
+            <summary>
+            Resetto lo stato per una nuova etichetta (dopo ^XA o ^XZ).
             </summary>
         </member>
         <member name="T:ZplRenderer.Core.ZplParser">
             <summary>
-            Parses ZPL code and creates a ZplLabel with all commands.
+            Parsa il codice ZPL e crea una ZplLabel con tutti i comandi.
+            Gestisce lo stato dei comandi modal e la validazione avanzata.
             </summary>
         </member>
         <member name="M:ZplRenderer.Core.ZplParser.#ctor">
             <summary>
-            Creates a new ZPL parser.
+            Creo un nuovo parser ZPL.
             </summary>
         </member>
-        <member name="M:ZplRenderer.Core.ZplParser.Parse(System.String)">
+        <member name="M:ZplRenderer.Core.ZplParser.Parse(System.String,System.Boolean)">
             <summary>
-            Parses ZPL code and returns a label with parsed commands.
+            Parso il codice ZPL e restituisco una label con i comandi parsati.
             </summary>
-            <param name="zplCode">The raw ZPL code string.</param>
-            <returns>A ZplLabel containing all parsed commands.</returns>
+            <param name="zplCode">La stringa di codice ZPL grezzo.</param>
+            <param name="throwOnError">Se true, lancia eccezioni per errori di parsing. Altrimenti li ignora.</param>
+            <returns>Una ZplLabel contenente tutti i comandi parsati.</returns>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.UpdateContextBeforeParsing(ZplRenderer.Core.ZplToken,ZplRenderer.Core.ZplParserContext)">
+            <summary>
+            Aggiorno il contesto prima di parsare un comando.
+            Gestisco comandi speciali come ^XA, ^DF, ecc.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.PrepareParameters(ZplRenderer.Core.ZplToken,ZplRenderer.Core.ZplParserContext,ZplRenderer.Commands.ZplCommand)">
+            <summary>
+            Preparo i parametri per il comando in base al contesto.
+            Gestisco casi speciali come ^FD con ^FH attivo.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.ApplyContextToCommand(ZplRenderer.Commands.ZplCommand,ZplRenderer.Core.ZplParserContext)">
+            <summary>
+            Applico informazioni dal contesto al comando appena parsato.
+            Posso estendere questo per applicare font corrente, posizione, ecc.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.UpdateContextAfterParsing(ZplRenderer.Core.ZplToken,ZplRenderer.Commands.ZplCommand,ZplRenderer.Core.ZplParserContext)">
+            <summary>
+            Aggiorno il contesto dopo aver parsato un comando.
+            I comandi modal influenzano i comandi successivi.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.DecodeHexIndicators(System.String,System.Char)">
+            <summary>
+            Decodifico gli indicatori hex nel formato _XX dove _ � l'hex indicator.
+            Esempio: "Test_0A_0DHello" con indicator '_' diventa "Test\n\rHello"
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.IsHexString(System.String)">
+            <summary>
+            Verifico se una stringa � valida hex (0-9, A-F).
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.ExtractFormatName(System.String,System.String@)">
+            <summary>
+            Estraggo il nome del formato da ^DF.
+            Formato: d:o.x (device:objectname.extension)
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplParser.UpdateLabelProperties(ZplRenderer.Core.ZplToken,ZplRenderer.Core.ZplLabel,ZplRenderer.Core.ZplParserContext)">
+            <summary>
+            Aggiorno le propriet� della label in base ai comandi parsati.
+            </summary>
         </member>
         <member name="M:ZplRenderer.Core.ZplParser.Validate(System.String)">
             <summary>
-            Validates ZPL code and returns any warnings or errors.
+            Valido il codice ZPL e restituisco eventuali warning o errori.
             </summary>
-            <param name="zplCode">The raw ZPL code string.</param>
-            <returns>List of validation messages.</returns>
+            <param name="zplCode">La stringa di codice ZPL grezzo.</param>
+            <returns>Lista di messaggi di validazione.</returns>
         </member>
         <member name="T:ZplRenderer.Core.ZplToken">
             <summary>
-            Represents a tokenized ZPL command.
+            Rappresenta un comando ZPL tokenizzato.
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplToken.Prefix">
             <summary>
-            The command prefix (^ or ~).
+            Il prefisso del comando (^ o ~).
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplToken.CommandCode">
             <summary>
-            The command code (e.g., FO, FD, A, GB, BC, BQ).
+            Il codice del comando (es. FO, FD, A0, GB, BC, BQ).
+            Per i comandi font ^A, include il font identifier (es. "A0", "AE").
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplToken.Parameters">
             <summary>
-            The raw parameters string after the command code.
+            La stringa dei parametri grezzi dopo il codice comando.
             </summary>
         </member>
         <member name="P:ZplRenderer.Core.ZplToken.RawContent">
             <summary>
-            Original raw content of the token.
+            Contenuto grezzo originale del token.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplToken.Position">
+            <summary>
+            Posizione del token nel codice sorgente (utile per debug).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Core.ZplToken.Length">
+            <summary>
+            Lunghezza del token nel codice sorgente.
             </summary>
         </member>
         <member name="T:ZplRenderer.Core.ZplTokenizer">
             <summary>
-            Tokenizes ZPL code into command tokens.
-            Uses a hybrid approach: Regex for standard commands, manual parsing for data-heavy commands.
+            Tokenizza il codice ZPL in token di comando.
+            
+            Implementazione basata su scanner carattere per carattere (NO regex).
+            I comandi ZPL iniziano SEMPRE con ^ o ~ seguiti da 1-2 lettere/cifre.
+            I parametri sono tutto il testo tra il codice comando e il prossimo ^ o ~.
+            
+            Casi speciali gestiti:
+            - ^FD, ^SN, ^FV: terminano con ^FS (il contenuto puo' includere ^ o ~)
+            - ^GF: dati grafici con byte count
+            - ~DG, ~DY: download con dati hex/binari
+            - ^DF: formato memorizzato, termina con ^XZ
+            - ^FX: commento, tutto fino al prossimo ^ viene ignorato
+            - ^A: il font identifier (0-9, A-Z) fa parte del codice comando
             </summary>
         </member>
         <member name="M:ZplRenderer.Core.ZplTokenizer.Tokenize(System.String)">
             <summary>
-            Tokenizes ZPL code into individual command tokens.
+            Tokenizza il codice ZPL in singoli token di comando.
+            Scansiona carattere per carattere cercando solo ^ e ~ come delimitatori.
             </summary>
-            <param name="zplCode">The raw ZPL code string.</param>
-            <returns>List of ZPL tokens.</returns>
+            <param name="zplCode">La stringa di codice ZPL grezzo.</param>
+            <returns>Lista di token ZPL.</returns>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.ExtractCommandCode(System.String,System.Int32@)">
+            <summary>
+            Estrae il codice comando dalla posizione corrente.
+            
+            Regole ZPL per i codici comando:
+            - La maggior parte dei comandi ha 2 caratteri (FO, FD, GB, BC, XA, FS, ecc.)
+            - Il comando ^A (font) e' speciale: ^A seguito da un identificatore font (0-9, A-Z)
+              forma un codice di 2 caratteri (es. A0, AE) ma il font identifier e' semanticamente
+              il primo parametro. Lo includiamo nel codice per compatibilita' con CommandFactory.
+            - Comandi monocarattere: ^A da solo (raro), ~J (host commands)
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.IsFieldDataCommand(System.String)">
+            <summary>
+            Comandi che terminano con ^FS: il contenuto puo' contenere ^ e ~ letterali.
+            ^FD (Field Data), ^SN (Serialization), ^FV (Field Variable).
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.IsDownloadFormatCommand(System.String)">
+            <summary>
+            ^DF: Download Format, contiene un formato ZPL completo che termina con ^XZ.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.IsDownloadCommand(System.Char,System.String)">
+            <summary>
+            Comandi di download con dati binari/hex (~DG, ~DB, ~DS, ~DT, ~DU, ~DY).
+            Usano il prefisso ~ e hanno formati speciali con byte count.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.ParseStandardParameters(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Parsing standard: legge i parametri fino al prossimo ^ o ~.
+            Usato per la maggior parte dei comandi ZPL.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.ParseUntilFieldSeparator(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Parsing per ^FD, ^SN, ^FV: legge tutto fino a ^FS.
+            Il contenuto puo' includere ^ e ~ come caratteri letterali.
+            Se ^FS non viene trovato (ZPL malformato), fallback a parsing standard.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.ParseUntilEndFormat(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Parsing per ^DF: legge tutto fino a ^XZ (formato memorizzato completo).
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.ParseComment(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Parsing per ^FX (commento ZPL): legge fino al prossimo ^.
+            Il commento viene ignorato dal rendering.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.ParseGraphicField(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Parsing per ^GF (Graphic Field).
+            Formato: ^GFa,b,c,d,data
+            a = tipo compressione (A=ASCII, B=Binary, C=Compressed)
+            b = binary byte count
+            c = graphic field count (totale byte)
+            d = bytes per row
+            data = dati hex (per ASCII: c*2 caratteri)
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.ParseDownloadCommand(System.String,System.String,System.Int32,System.Int32@)">
+            <summary>
+            Parsing per comandi di download (~DG, ~DY, ecc).
+            Formato ~DG: d:o.x,t,w,data (t = total bytes, data = hex)
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.ParseDGCommand(System.String,System.Int32,System.Int32@)">
+            <summary>
+            Parsing specifico per ~DG (Download Graphics).
+            Formato: ~DGd:o.x,t,w,data
+            d = dispositivo, o = nome, x = estensione
+            t = total bytes, w = bytes per riga
+            data = dati hex ASCII
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.FindNextCommandDelimiter(System.String,System.Int32)">
+            <summary>
+            Trova il prossimo delimitatore di comando (^ o ~) nella stringa ZPL.
+            Restituisce -1 se non trovato.
+            </summary>
+        </member>
+        <member name="M:ZplRenderer.Core.ZplTokenizer.IsAlphaNumeric(System.Char)">
+            <summary>
+            Verifica se un carattere e' alfanumerico (A-Z, a-z, 0-9).
+            </summary>
         </member>
         <member name="T:ZplRenderer.Drawers.DrawerContext">
             <summary>
@@ -502,6 +764,7 @@
             Base interface for rendering a specific type of ZPL element.
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:ZplRenderer.Drawers.TextFieldDrawer.WrapText(System.String,SkiaSharp.SKPaint,System.Single,System.Int32)" -->
         <member name="T:ZplRenderer.Elements.ElementOriginType">
             <summary>
             Defines how the position coordinates should be interpreted.
@@ -541,8 +804,14 @@
             Represents a text element to be drawn.
             </summary>
         </member>
+        <member name="P:ZplRenderer.Elements.ZplTextField.ZplFontName">
+            <summary>
+            Identificatore del font ZPL originale (0-9, A-Z).
+            Necessario per applicare l'AspectRatio corretto durante il rendering.
+            </summary>
+        </member>
         <member name="P:ZplRenderer.Elements.ZplTextField.FieldBlock">
-            <summary>Field Block settings (if applied).</summary>
+            <summary>Impostazioni Field Block (^FB) se attive.</summary>
         </member>
         <member name="T:ZplRenderer.Elements.ZplFieldBlock">
             <summary>
@@ -552,6 +821,13 @@
         <member name="T:ZplRenderer.Elements.ZplGraphicBox">
             <summary>
             Represents a graphic box or line (^GB).
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Elements.ZplGraphicBox.CornerRounding">
+            <summary>
+            Grado di arrotondamento degli angoli (0-8).
+            0 = angoli retti, 8 = massimo arrotondamento (il raggio è proporzionale al lato minore).
+            Corrisponde al 5° parametro del comando ^GB.
             </summary>
         </member>
         <member name="T:ZplRenderer.Elements.ZplGraphicEllipse">
@@ -567,6 +843,11 @@
         <member name="T:ZplRenderer.Elements.ZplBarcode">
             <summary>
             Represents a barcode.
+            </summary>
+        </member>
+        <member name="P:ZplRenderer.Elements.ZplBarcode.ErrorCorrectionLevel">
+            <summary>
+            QR Code error correction level: 'H', 'Q', 'M', 'L'. Default 'M'.
             </summary>
         </member>
         <member name="T:ZplRenderer.Rendering.IZplRenderer">

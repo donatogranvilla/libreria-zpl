@@ -5855,11 +5855,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Dev\\libreria zpl\\tests\\ZplRenderer.Tests\\ZplRenderer.Tests.csproj",
+      "projectUniqueName": "C:\\Dev\\libreria-zpl\\tests\\ZplRenderer.Tests\\ZplRenderer.Tests.csproj",
       "projectName": "ZplRenderer.Tests",
-      "projectPath": "c:\\Dev\\libreria zpl\\tests\\ZplRenderer.Tests\\ZplRenderer.Tests.csproj",
+      "projectPath": "C:\\Dev\\libreria-zpl\\tests\\ZplRenderer.Tests\\ZplRenderer.Tests.csproj",
       "packagesPath": "C:\\Users\\d.granvillano\\.nuget\\packages\\",
-      "outputPath": "c:\\Dev\\libreria zpl\\tests\\ZplRenderer.Tests\\obj\\",
+      "outputPath": "C:\\Dev\\libreria-zpl\\tests\\ZplRenderer.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5881,8 +5881,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "c:\\Dev\\libreria zpl\\src\\ZplRenderer\\ZplRenderer.csproj": {
-              "projectPath": "c:\\Dev\\libreria zpl\\src\\ZplRenderer\\ZplRenderer.csproj"
+            "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj": {
+              "projectPath": "C:\\Dev\\libreria-zpl\\src\\ZplRenderer\\ZplRenderer.csproj"
             }
           }
         }
@@ -5934,15 +5934,15 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.23, 8.0.23]"
+            "version": "[8.0.24, 8.0.24]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.23, 8.0.23]"
+            "version": "[8.0.24, 8.0.24]"
           },
           {
             "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.23, 8.0.23]"
+            "version": "[8.0.24, 8.0.24]"
           }
         ],
         "frameworkReferences": {
@@ -5950,7 +5950,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.309/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.311/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

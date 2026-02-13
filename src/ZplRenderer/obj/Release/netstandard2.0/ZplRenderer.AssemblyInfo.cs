@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("A C# library that interprets ZPL code and generates bitmap previews of labels")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a514a4e49eb16ad252e55f146068f9ef9e82aa21")]
 [assembly: System.Reflection.AssemblyProductAttribute("ZplRenderer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ZplRenderer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

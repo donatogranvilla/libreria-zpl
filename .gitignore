@@ -1,0 +1,51 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# NuGet
+**/[Pp]ackages/*
+*.nupkg
+*.snupkg
+.nuget/
+
+# MSBuild
+*.log
+msbuild.log
+
+# IDE
+.idea/
+*.swp
+*~
+.vscode/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Test results
+TestResults/
+*.trx
+coverage*/
+
+# Generated output
+*.png
+!examples/lables/*.txt
+
+# Misc
+FontDebug.csx
